@@ -1,0 +1,10 @@
+{
+	"model": "qwen3:8b",
+	"endpointUrl": "http://localhost:11434/v1",
+	"servers": [
+		{
+			"type": "sse",
+			"url": "http://localhost:7860/gradio_api/mcp/sse"
+		}
+	]
+}
