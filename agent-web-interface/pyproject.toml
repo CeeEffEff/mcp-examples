@@ -1,9 +1,12 @@
 [project]
-name = "mcp-cli"
+name = "mcp-web-interface"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "huggingface-hub[mcp]>=0.32.0",
+    "fastmcp>=2.10.6",
+    "gradio[mcp]>=5.39.0",
+    "mcp>=1.10.1",
+    "smolagents[litellm,mcp]>=1.20.0",
 ]

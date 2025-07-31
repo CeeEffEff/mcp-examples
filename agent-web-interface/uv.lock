@@ -798,7 +798,7 @@ wheels = [
 ]
 
 [[package]]
-name = "mcp-host"
+name = "mcp-web-interface"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

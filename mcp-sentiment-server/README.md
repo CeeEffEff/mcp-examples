@@ -17,7 +17,7 @@ uv sync
 ## Running the Server
 Run the server via:
 ```bash
-uv run mainpy
+uv run main.py
 ```
 
 ### View the Server Schema
@@ -41,19 +41,15 @@ The stream of SSE is viewable at: http://localhost:7860/gradio_api/mcp/sse
 ## Registering the MCP Server
 
 ### Basic Server
-1. Create a new file `mcp-sentiment.json`.
+1. Create a new file `mcp.json`.
 2. Add the following JSON content to the file:
 ```json
 {
-  "servers": [
-    {
-      "name": "Sentiment Analysis",
-      "transport": {
-        "type": "sse",
-        "url": "http://localhost:7860/gradio_api/mcp/sse"
-      }
+  "mcpServers": {
+    "sentiment-analysis": {
+      "url": "http://localhost:7860/gradio_api/mcp/sse"
     }
-  ]
+  }
 }
 ```
 
@@ -64,7 +60,7 @@ The mcp-remote tool serves as a bridge solution that:
 * Forwards requests from Cursor to the remote MCP server
 * Uses the familiar configuration file format
 To configure:
-1. Create a new file `mcp-sentiment.json`.
+1. Create a new file `mcp.json`.
 2. Add the following JSON content to the file:
 ```json
 {

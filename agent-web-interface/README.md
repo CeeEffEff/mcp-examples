@@ -16,17 +16,51 @@ uv
 uv sync
 ```
 
-## Running the Host
+## Running the Web Chat Host
 Run the server via:
 ```bash
 uv run main.py
 ```
+Once the host is running, you can interact with the LLM through the web interface at: http://localhost:7861
 
-## Web Interface
-Once the host is running, you can interact with the LLM through the web interface at: http://localhost:7860
+## Dependency Graph
+
+## Architecture
+The host bridges a LiteLLM model with MCP-compatible servers.
+You might imagine the object hierarchy to look something like:
+Standard
+```mermaid
+graph TD
+  A[host] -->|has| B[agent]
+  A -->|has| C[MCP client]
+  B -->|has| D[LLM]
+  C -->|has| E[tools references]
+  B -->|has| E[tools references]
+  C -->|has| G[MCP server]
+  G[MCP server] -->|has| H[tools] 
+```
+
+In reality, due to dependency inversion and an awkward context management for `MCPClient`, we have:
+```mermaid
+graph TD
+  F[Gradio MCP Server] -->|in| B[MCPClient]
+  A[tools references] -->|in| B[MCPClient]
+  A -->|in| C[CodeAgent]
+  D[LiteLLMModel] -->|in| C
+  C -->|in| E[Host]
+```
+
+Behaviour
+```mermaid
+graph TD
+  A[MCPClient] -->|finds| B[tools]
+  C[CodeAgent] -->|uses| B
+  C -->|uses| D[LiteLLMModel]
+  E[Host] -->|uses| C
+```
 
 ## Configuration Details
-The agent is configured via a factory with accepts an enum values relating to specific preset configurations its the model and servers.
+The agent is configured via a factory with accepts an enum values relating to specific preset configurations for its the model and servers.
 
 Currently the presets used are:
 - `OLLAMA_QWEN_3`: a qwen3:8b model running locally via Ollama
@@ -49,14 +83,5 @@ class ServerConfig(EnumDict):
         "url": "http://localhost:7860/gradio_api/mcp/sse",
         "transport": "sse",
     }
-```
-
-## Architecture
-The host bridges a LiteLLM model with MCP-compatible servers using:
-1. `McpHost` core logic
-2. `CodeAgent` for tool integration
-3. Gradio interface for web interaction
-
-The main entry point is `main.py`, which constructs the host using `McpHostFactory` with specified server and model configurations.
 ```
 
