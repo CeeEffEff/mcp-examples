@@ -1,0 +1,27 @@
+{
+	"servers": {
+		"sentiment-analysis": {
+			"url": "http://localhost:7860/gradio_api/mcp/sse",
+			"type": "http"
+		},
+		// "LocalUtil": {
+		// 	"command": "uv",
+		// 	"args": [
+		// 		"run",
+		// 		"--with",
+		// 		"fastmcp",
+		// 		"fastmcp",
+		// 		"run",
+		// 		"/Users/conor.fehilly/Documents/repos/mcp-examples/fastmcp-util-server/main.py"
+		// 	]
+		// }
+		// "memory": {
+		// 	"command": "npx",
+		// 	"args": [
+		// 	"-y",
+		// 	"@modelcontextprotocol/server-memory"
+		// 	]
+		// }
+	},
+	"inputs": []
+}

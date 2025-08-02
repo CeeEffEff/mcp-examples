@@ -1,0 +1,24 @@
+name: Repo KG Prompt
+version: 0.0.1
+schema: v1
+prompts:
+  - name: Repo Knowledge Graph Task Prompt
+    description: Describes a process for updating the repo knowledge graph
+    prompt: |
+      Primary task:
+        Update the repository knowledge graph until we have 100% coverage.
+        You will use the the Memory MCP Memory server for this.
+
+        If you need to understand how the repo compares, you can do an ls tool.
+
+      Secondary task:
+        After every 3 updates to the Memory MCP Memory knowledge graph:
+
+          1. evaluate the correctness of these 3 additions
+
+          2. update the rule represent-repositories-in-memory-mcp-kg.md based off of the correctness of recent additions
+
+          3. Clear your context window
+
+        Then you can return to your Primary task.
+

@@ -1,0 +1,38 @@
+{
+  "name": "LocalUtil",
+  "instructions": null,
+  "fastmcp_version": "2.11.0",
+  "mcp_version": "1.12.3",
+  "server_version": "1.0",
+  "tools": [
+    {
+      "key": "fix_codebase_memory",
+      "name": "fix_codebase_memory",
+      "description": "\nFix Codebase Memory by removing corrupted entries.\nIf you are getting errors when using Codebase Memory that aren't becuause of invalid input,\nyou can try to fix the memory via this method.\nA good example is if the read_graph tool as it takes no arguments.\nAny invalid entries will be returned in case you would like to try and fix them.\n",
+      "input_schema": {
+        "properties": {},
+        "title": "fix_codebase_memoryArguments",
+        "type": "object"
+      },
+      "annotations": null,
+      "tags": null,
+      "enabled": null
+    }
+  ],
+  "prompts": [],
+  "resources": [],
+  "templates": [],
+  "capabilities": {
+    "tools": {
+      "listChanged": true
+    },
+    "resources": {
+      "subscribe": false,
+      "listChanged": false
+    },
+    "prompts": {
+      "listChanged": false
+    },
+    "logging": {}
+  }
+}

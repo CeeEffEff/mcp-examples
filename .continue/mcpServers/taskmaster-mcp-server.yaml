@@ -1,0 +1,9 @@
+name: Task Master
+version: 0.0.5
+schema: v1
+mcpServers:
+  - name: taskmaster-ai
+    command: npx
+    args:
+      - -y
+      - task-master-ai

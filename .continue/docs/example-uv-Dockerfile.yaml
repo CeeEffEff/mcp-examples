@@ -1,0 +1,6 @@
+name: Example Dockerfile using UV
+version: 0.0.1
+schema: v1
+docs:
+  - name: Example Dockerfile using UV
+    startUrl: https://raw.githubusercontent.com/astral-sh/uv-docker-example/refs/heads/main/Dockerfile
