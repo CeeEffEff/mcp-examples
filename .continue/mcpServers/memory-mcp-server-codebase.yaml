@@ -9,4 +9,4 @@ mcpServers:
       - "-y"
       - "@modelcontextprotocol/server-memory"
     env:
-      MEMORY_FILE_PATH: "/Users/conor.fehilly/Documents/repos/mcp-examples/memory.json"
+      MEMORY_FILE_PATH: "/Users/conor.fehilly/Documents/repos/mcp-examples/memory.jsonl"
