@@ -1,0 +1,39 @@
+name: Reflect on Dockerfile Generation
+version: 0.0.1
+schema: v1
+prompts:
+  - name: Reflect on Dockerfile Generation
+    description: Use to have an Agent reflect on how it generated a Dockerfile
+    prompt: |
+      # Task
+      1. Reflect on how you took my prompt and turned that into the correct Dockerfile given the context of the service directory.
+      2. Now I need you to think about how you would generate another Dockerfile using the template that was in the rule, given an arbitrary directory that contained some python source, possibly some md files for documentation and likely some package management related files.
+      3. Then form a clear, concise, instructive plan, written in markdown that another agent without your experience could follow.
+
+      If at any point you are not 100% certain about something, and don't think you can work it out, ask for input from the User.
+
+      # Definitions
+        * Arbitrary directory: not agent-cli, so could have different name and contain different files
+        * python source: files with a .py extension in the service directory root or even subdirectories. One of these is likely to be the entrypoint to the service (more likely if it is in service directory root)
+        * documentation: Services will often have .md files that describe how they work, how to setup, important objects etc. They may detail solutions to common issues you might be having
+        * package management: defines the dependencies for the project, and will need to handled by the Dockerfile you generate. Ideally this would happen in a builder step of the Dockerfile using the builder pattern.
+
+
+
+      # Available tools
+      You must  use tools available from the following MCP servers:
+      - Memory: Access to a knowledge graph as offline memory for you, where you should put thoughts and facts so that you don't have to keep them all immediately to mind - just be aware that the information you need might be in your memory
+      - taskmaser-ai: Allows advanced management of tasks, ensuring they can be broken up into smaller manageable components.
+
+      # Files to ignore
+      Do not attempt to read the following files as they are large and are build artifacts that don't contain any more information that the files that generated them:
+        - .venv/*
+        - node_modules/*
+        - package-lock.json
+        - *.lock
+      Other files/dirs that you know fit into this category should also not be read by you.
+
+      In fact, you might decide that there is a better way to define these files that are to be ignored so that they can be more easily used/maintained by whoever is following the plan.
+
+      # Goal
+      Generate a clear instructive plan, written in markdown, that when followed would construct a Dockerfile for an arbitrary service directory that can be built by docker, and when run by docker runs the service much in the same way it runs outside of docker.

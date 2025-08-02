@@ -1,0 +1,12 @@
+name: Codebase Memory MCP
+version: 1.0.0
+schema: v1
+
+mcpServers:
+  - name: Codebase Memory
+    command: npx
+    args:
+      - "-y"
+      - "@modelcontextprotocol/server-memory"
+    env:
+      MEMORY_FILE_PATH: "/Users/conor.fehilly/Documents/repos/mcp-examples/memory.json"

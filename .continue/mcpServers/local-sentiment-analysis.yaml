@@ -1,0 +1,12 @@
+name: Local Sentiment Analysis mcpServer
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: Sentiment Analysis
+    command: npx
+    args:
+      - "-y"
+      - "mcp-remote"
+      - "http://localhost:7860/gradio_api/mcp/sse"
+      - "--transport"
+      - "sse-only"

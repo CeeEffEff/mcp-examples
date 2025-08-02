@@ -1,0 +1,67 @@
+name: Retroactive Knowledge Graph Update
+version: 0.0.1
+schema: v1
+prompts:
+  - name: Retroactive Knowledge Graph Update
+    description: Retroactive Knowledge Graph Update
+    prompt: |
+      # Prerequisites
+      In order to perform this task:
+      * We must have interacted or you must have interacted with the codebase.
+      * You have access to the Codebase Memory tool.
+      If you don't meet the prerequisites return an explanation to the user.
+
+      # Task
+      Please reflect on the chat history and any new information was gathered during the interaction
+      update your memory knowledge graph using the Codebase Memory tool as follows:
+      1 Create entities
+      2 Connect them to the current entities using relations
+      3 Store facts about them as observations
+
+      If at any point you need to clarify something it is **extremely** important you ask the user.
+
+      # Considerations
+      To be extra safe, you should make sure any string attribute of an object you give to a tool as an argument has
+      any special characters removed.
+      These may be special characters in other languages to the one you are using.
+      
+
+      # Definitions
+      ## Entities
+      Some examples of the type of entities this codebase :
+      * files
+      * directories
+      * classes
+      * objects
+      * scripts
+      * to-do items
+      * processes
+
+      And more that you might decide.
+
+      ## Relations 
+      Describes a relationship - edge between two nodes in the knowlege graph
+
+      ## Observations
+      When you are working in this codebase you will:
+      * read and execute a lot of code
+      * traverse the directory tree
+      * learn about the user through interacting with them
+      * solve problems
+      * be unable to solve problems
+
+      Through this you should observe:
+      * patterns
+      * structure
+      * standards
+      * pitfalls
+      * issues
+      * definitions
+      * purpose of different entities
+      * the general setup and tech stack
+      * important areas of the code base
+      * files to ignore (check with a user if you think you've found a new file that needs ignoring)
+
+
+
+

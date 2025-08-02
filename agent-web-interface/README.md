@@ -23,7 +23,10 @@ uv run main.py
 ```
 Once the host is running, you can interact with the LLM through the web interface at: http://localhost:7861
 
-## Dependency Graph
+## Prerequisites
+- Ensure Ollama model is running at http://localhost:11434
+- Ensure Gradio MCP server is running at http://localhost:7860/gradio_api/mcp/sse
+- Install UV via https://docs.astral.sh/uv/getting-started/installation/
 
 ## Architecture
 The host bridges a LiteLLM model with MCP-compatible servers.
@@ -48,15 +51,6 @@ graph TD
   A -->|in| C[CodeAgent]
   D[LiteLLMModel] -->|in| C
   C -->|in| E[Host]
-```
-
-Behaviour
-```mermaid
-graph TD
-  A[MCPClient] -->|finds| B[tools]
-  C[CodeAgent] -->|uses| B
-  C -->|uses| D[LiteLLMModel]
-  E[Host] -->|uses| C
 ```
 
 ## Configuration Details
@@ -84,4 +78,3 @@ class ServerConfig(EnumDict):
         "transport": "sse",
     }
 ```
-

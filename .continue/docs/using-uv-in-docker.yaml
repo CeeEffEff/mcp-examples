@@ -1,0 +1,6 @@
+name: Using UV in Docker
+version: 0.0.1
+schema: v1
+docs:
+  - name: Using UV in Docker
+    startUrl: https://docs.astral.sh/uv/guides/integration/docker/

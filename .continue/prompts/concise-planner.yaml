@@ -1,0 +1,7 @@
+name: concise_planner
+version: 0.0.1
+schema: v1
+prompts:
+  - name: Concise planner
+    description: Encourages concise planning
+    prompt: Be concise with your thoughts and if you are repeating yourself make a decision to break out of the loop. If you are stuck, ask for help or provide more context. Output a concise plan (just short bullet points).
