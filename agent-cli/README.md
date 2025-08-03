@@ -1,6 +1,8 @@
 # agent-cli
 https://huggingface.co/learn/mcp-course/unit2/tiny-agents
+https://typer.tiangolo.com/#run-it
 https://ollama.com/blog/openai-compatibility
+
 
 The CLI bridges an Ollama model with a Gradio server, both locally running.
 
