@@ -7,7 +7,6 @@ description: This rule should be used when creating a Dockerfile for a Python
 alwaysApply: false
 ---
 Parameters:
-- SERVICE_NAME: Name of the service (e.g., fastapi_app, my_service)
 - CMD_COMMAND: Command to run the service (e.g., ["fastapi", "dev", "src/main.py"], ["myapp", "run"])
 
 Template:
@@ -37,8 +36,3 @@ ENTRYPOINT []
 # Run the service by default
 CMD {{ CMD_COMMAND }}
 ```
-
-📌 Usage
-Switch to Agent Mode using the Mode Selector dropdown to apply this rule.
-Provide the SERVICE_NAME and CMD_COMMAND values based on your service's requirements.
-The agent will generate a Dockerfile with the correct CMD for your service.

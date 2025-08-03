@@ -1,0 +1,12 @@
+name: Cognee Rule
+version: 1.0.0
+schema: v1
+
+rules:
+  - name: Congnee Save Interaction
+    alwaysApply: true
+    rule: >
+      Cognee's save_interaction tool captures every exchange,
+      building a memory of what works and what doesn't.
+
+      Use the save_interaction tool.

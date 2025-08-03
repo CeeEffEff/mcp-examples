@@ -15,21 +15,31 @@ uv sync
 
 ## Running the Server
 
-### Standard
+### [FastMCP CLI](https://gofastmcp.com/getting-started/quickstart#using-the-fastmcp-cli)
+Allows easy overriding of the transport.
 Run the server via:
 ```bash
 uv run fastmcp run main.py:mcp --transport http
 ```
 It will be available at: http://127.0.0.1:8000
 
-### Dev
-Runs with MCP Inspector which is web UI for interacting with the server.
 
+### [Dev - STDIO](https://gofastmcp.com/patterns/cli#dev)
+Runs with MCP Inspector which is a web UI for interacting with the server, but only in STDIO mode:
 ```bash
-uv run fastmcp dev main.py:mcp --transport http
+uv run fastmcp dev main.py:mcp
 ```
-
 MCP Inspector will open in your browser on localhost:6247 by default.
+
+
+### [Dev - http](https://gofastmcp.com/patterns/cli#dev)
+Run via the FastMCP CLI and manually running MCP Inspector:
+```bash
+uv run fastmcp run main.py:mcp --transport http
+npx @modelcontextprotocol/inspector
+```
+MCP Inspector will open in your browser on localhost:6247 by default.
+
 
 ## Registering the MCP Server
 

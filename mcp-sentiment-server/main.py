@@ -27,14 +27,11 @@ def sentiment_analysis(text: str) -> dict:
     return result
 
 
-1
-
 # Create the Gradio interface
 demo = gr.Interface(
     fn=sentiment_analysis,
     inputs=gr.Textbox(placeholder="Enter text to analyze..."),
     outputs=gr.JSON(),
-    # gr.Textbox(),  # Changed from gr.JSON() to gr.Textbox()
     title="Text Sentiment Analysis",
     description="Analyze the sentiment of text using TextBlob",
 )

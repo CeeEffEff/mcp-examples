@@ -1,4 +1,4 @@
-# mcp-host
+# agent-web-interface
 https://huggingface.co/learn/mcp-course/unit2/gradio-client
 
 ## Installation
