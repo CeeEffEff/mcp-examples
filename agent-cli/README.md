@@ -27,7 +27,7 @@ uv run tiny-agents run agent/agent.json
 ```
 
 ## Configuration Details
-The agent configuration is:
+The agent configuration file defines its models and MCP servers:
 ```json
 {
 	"model": "qwen3:8b",
@@ -40,6 +40,7 @@ The agent configuration is:
 	]
 }
 ```
+A custom prompt can also be added to `agent/PROMPT.md`
 
 ### Model Configuration
 The agent is configured to use a local qwen3:8b model running locally via Ollama.

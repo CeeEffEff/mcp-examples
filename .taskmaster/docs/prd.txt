@@ -1,0 +1,25 @@
+## Product Requirements Document (PRD)
+
+### Project Overview
+- **Project Name**: [Insert Project Name]
+- **Description**: [Brief description of what the project does]
+- **Target Users**: [Who will use this product?]
+- **Key Features**: [List 3-5 core features]
+
+### Requirements
+#### Functional Requirements
+- [User story 1: What users can do]
+- [User story 2: What users can do]
+
+#### Non-Functional Requirements
+- [Performance: How fast should it work?]
+- [Security: What security measures are needed?]
+
+### Acceptance Criteria
+- [Definition of done for each feature]
+- [Testing requirements]
+
+### Notes
+- [Any special considerations or constraints]
+
+> *This is a template - customize this PRD to match your specific project needs.*

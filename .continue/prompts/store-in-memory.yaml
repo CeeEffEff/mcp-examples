@@ -1,16 +1,11 @@
-name: Repo Exploration
+name: Keep Codebase Memory up-to-date
 version: 0.0.1
 schema: v1
 prompts:
-  - name: Repo Exploration
-    description: Repo Exploration to update Codebase Memory
+  - name:  Keep Codebase Memory up-to-date
+    description:  Keep Codebase Memory up-to-date during processing
     prompt: |
-      You are tasked with filling in this section of the root level README will a bullet list.
-      You should achieve this by first doing some exploration to understand the repo.
-
-      You should use taskmaster-ai tools to create, manage and execute tasks, that will let you achieve this exploration.
-
-      During your exploration be attentive and identify any new information was gathered during the interaction, using it to update your memory knowledge graph using the Codebase Memory tool as follows:
+      While doing the primary task, also be attentive and identify any new information was gathered during the interaction, using it to update your memory knowledge graph using the Codebase Memory tool as follows:
       1. Create entities
       2. Connect them to the current entities using relations
       3. Store facts about them as observations

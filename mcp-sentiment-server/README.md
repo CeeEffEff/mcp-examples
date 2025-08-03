@@ -1,4 +1,4 @@
-# mcp-sentiment
+# mcp-sentiment-server
 https://huggingface.co/learn/mcp-course/unit2/gradio-server
 
 ## Installation

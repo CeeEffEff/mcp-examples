@@ -212,6 +212,7 @@ node_modules/
 .DS_Store
 .continue/data_stores
 
+*/memory.jsonl
 memory.jsonl
 
 # Logs
@@ -232,7 +233,10 @@ dev-debug.log
 *.sw?
 # OS specific
 
+# .taskmaster/
+.taskmaster/docs/docker_prd.txt
+.taskmaster/docs/incorrect-venv_prd.txt
+
 # Task files
 # tasks.json
 # tasks/ 
-.taskmaster/

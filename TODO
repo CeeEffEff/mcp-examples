@@ -1,0 +1,14 @@
+# TODO
+
+[ ] Explore tiny agents OPTIONS and COMMAND ARGS
+[ ] See if tiny agents can communicate with eachother
+[ ] Implement proper agent memory
+[ ] See if continue.dev index db is easy to access
+[ ] Try and impliment BDI agents for planning
+[ ] Complete Dockerfile creation
+[ ] Complete docker-compose setup
+[x] Tidy up GOTCHAS file
+[x] Redo README repo tree
+[ ] Somehow get rid of the hardcoded references to my dir?
+[ ] Setup cognee and replace old style stores?
+[ ] Try and unify some directories

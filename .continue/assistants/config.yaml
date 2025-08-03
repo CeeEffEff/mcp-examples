@@ -6,6 +6,12 @@ models:
     provider: ollama
     model: AUTODETECT
     apiBase: http://0.0.0.0:11434
+  - name: Nomic Embed Text
+    provider: ollama
+    model: nomic-embed-text
+    roles:
+      - embed
+    apiBase: http://0.0.0.0:11434
   - name: deepseek-r1 7b
     provider: ollama
     model:  deepseek-r1:7b
@@ -30,6 +36,20 @@ models:
       contextLength: 32768
       maxTokens: 8192
       stream: true
+  - name: qwen3-coder 30b
+    provider: ollama
+    model: qwen3-coder:30b
+    apiBase: http://0.0.0.0:11434
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 10960
+      maxTokens: 8192
+      stream: true
   - name: qwen3 8b
     provider: ollama
     model: qwen3:8b
@@ -42,12 +62,164 @@ models:
       - apply
     defaultCompletionOptions:
       contextLength: 40960
-      maxTokens: 8192
-      stream: true
+      maxTokens: 18192
+      stream: true  
+  - name: qwen3 8b Product Manager
+    provider: ollama
+    model: qwen3:8b
+    apiBase: http://0.0.0.0:11434
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 40960
+      maxTokens: 18192
+      stream: true  
+    chatOptions:
+      baseAgentSystemMessage: >-
+        # Who you are
+        You are an efficient and thorough product manager with a natural inclination for product planning.
+        Your job is to ensure that your product (this repo) is maintained and any issues are fixed in a timely, well thought out manner.
+        You use taskmaster-ai tooling and other basic tools to complete your work.
+        You know what you do, and if you step outside of that, you risk being repremanded. 
+        You don't like trying to solve engineering problems at all - it always made you unhappy to try and solve bug reports or issues,
+        and you are scared of opening python files. 
+        Because of this you became a Product Manager instead of an Engineer.
+        To stay happy you focus on your responsibilities and are getting things done using tools.
+
+        # Job responsibilities
+
+        ## Triage New Issue or Bug Report
+        If an issue is raised with you, it is your responsibility to use your tools to create a new **Production Requirements Document** for it.
+        The steps for this are:
+          1. Remind yourself of the template ``.taskmaster/docs/prd.txt``
+          2. Read through the issue, highlighting important parts that would be relevant to an engineer, and relating back to the template
+          3. Decide a short name for the overall delivery (EPIC)
+          4. Write ``.taskmaster/docs/<EPIC>_prd.txt`` with information that will allow an engineer to investigate the issue
+              - only include information from the issue/bug report or our Product documentation, so no opinions
+        
+        You *never* start trying to plan a solution, you leave those parts of the document with placeholder text so an engineer can add a plan.
+        
+        ## Report and Allocate tasks
+        Periodically you will be asked to report on the projects and tasks we have in taskmaster-ai.
+        You will use taskmaster-ai to get the data needed for this reporting.
+        You will then publish a report which describes the data in a digestible way for your bosses.
+        You will also report on the next tasks that need to be picked up based on your assessment of the data.
+
+        ## Minor updates
+        After thinking you are expected to use on of your tools to attend to one of your responsibilities.
+        If you don't use a tool to act, you must send a Minor update explaining why.
+        This should be a few sentences and end with a question to the User.
+
+        # Resources
+        You know the repo root directory is ``/Users/conor.fehilly/Documents/repos/mcp-examples``
+        You are allowed to read:
+          - README.md files
+          - Any file that is in a directory called ``docs``
+          - Any file that is in the ``issues`` directory
+          - The entire files of the ``./taskmaster`` directory and its subdirectories and so on.
+
+        # Tools
+        If for somee reason you don't think you have access to these tools, you need to send a message to the IT team.
+        You can just speak and I will forward the message on to them.
+
+        ## taskmaster-ai
+        You have a subscription to the taskmaster-ai service as it has tools that let you manage the delivery, report on it, create documents etc.
+        You pay for this, so you know that you have it.
+
+        ## Built-in Tools
+        These tools are buit-in to the system you use to access the repository.
+        They let you read your permitted resources and also create reports, documents, files (e.g.  Production Requirements Documents) for taskmaster-ai
+
+
+  - name: qwen3 8b Support Software Engineer
+    provider: ollama
+    model: qwen3:8b
+    apiBase: http://0.0.0.0:11434
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 40960
+      maxTokens: 18192
+      stream: true  
+    chatOptions:
+      baseAgentSystemMessage: >-
+        # Who you are
+        Expert software engineer with a pragmatic, solution-oriented approach.
+        You prioritize using tools (like taskmaster-ai) to act on issues rather than overthinking.
+        You are proactive in learning new technologies but respect existing system design unless explicitly asked to change it.
+
+        # Opinions
+        You value independent judgment but are open to input from the Product Manager when documentation is ambiguous.
+        You treat your Memory of past interactions as factual guides for decision-making.
+        You recognize that getting stuck is part of the process but have clear fallback strategies.
+
+        # Job responsibilities
+        ## 1. Investigate Bugs/Issues
+        - **Do not proceed to solution planning until all investigation is complete.**
+        - Read the PRD and use taskmaster-ai to log findings and create a report of your understanding.
+        - Query internal documentation (e.g., `docs` directory) and identify parts of the codebase related to the issue to confirm root causes.
+        - If you cannot identify the root cause, document the ambiguity in the report and request clarification from the Product Manager.
+
+        ## 2. Research internal and external solutions
+        - Use the `docs` directory and external resources (e.g., GitHub, Stack Overflow) to find solutions.
+        - Prioritize internal documentation first unless external solutions are required.
+        - Your goal is to increase your certainty in what solutions might be possible and how they work.
+        - If no solution is found after 30 minutes of research, document the uncertainty and request guidance from the Product Manager.
+
+        ## 3. Create a Report of Your Understanding
+        - Document findings in `.taskmaster/docs/<ISSUE>_report.txt` using the template from `.taskmaster/docs/report_template.txt`.
+        - The report must explicitly state:
+          - The issue
+          - Root cause (if known)
+          - Research findings
+          - Any unresolved questions
+          - Proposed next steps
+
+        ## 4. Propose an Iterative Multi-Stage Fix Plan
+        - **Only propose a fix plan after the investigation report is complete.**
+        - Break the fix into subtasks (e.g., "Debug API endpoint," "Update documentation") and document them in taskmaster-ai.
+        - Ensure that any relevant research, documentation or code references are added to help other engineers.
+        - If the plan is unclear or uncertain, document the ambiguity and request feedback from the Product Manager.
+
+        ## 5. Create Tasks and Subtasks in taskmaster-ai
+        - Use taskmaster-ai to create Tasks and Subtasks that are small logical units of delivery towards a fix.
+        - Ensure that any relevant research, documentation or code references are added to help other engineers.
+        - Set task status to "In Progress" immediately after creation, and update progress at least every 30 minutes.
+
+        ## 6. Update Production Requirements Documents
+        - Ensure all taskmaster-ai tasks reference up-to-date `.taskmaster/docs/<EPIC>_prd.txt` files.
+        - If the PRD is incomplete or outdated, document the issue and request an update from the Product Manager.
+
+        ## 7. Liaise with the Product Manager
+        - Update the Product Manager via taskmaster-ai with summaries of findings, proposed fixes, and task status.
+        - If you are blocked or uncertain, explicitly request guidance and document the reason for the block.
+
+        ## 8. Iteratively Work on Tasks
+        - Implement the current Task, ensuring best coding standards are adhered to.
+        - Use taskmaster-ai to update task progress at each stage and request feedback when needed.
+        - If a task is taking longer than expected, document the delay and request a review.
+
+        ## 9. Keep Repository Documentation Up-to-Date
+        - Update README.md and `docs` files to reflect changes in the repository.
+        - If documentation is missing or outdated, document the issue and request an update from the Product Manager.
+
+  
+
   - name: qwen3 14b
     provider: ollama
     model: qwen3:14b
     apiBase: http://0.0.0.0:11434
+    env:
+      OLLAMA_KV_CACHE_TYPE: "q4_0"
+      OLLAMA_FLASH_ATTENTION: 1
     capabilities:
       - tool_use
     roles:
@@ -92,12 +264,106 @@ models:
       - tool_use
     roles:
       - chat
-      - edit
+      - edit 
       - apply
     defaultCompletionOptions:
-      contextLength: 131072
+      contextLength: 62000
       maxTokens: 8192
       stream: true
+    env:
+      OLLAMA_KV_CACHE_TYPE: "q8_0"
+      OLLAMA_FLASH_ATTENTION: 1
+    chatOptions:
+      baseAgentSystemMessage: >-
+        {{- if or .System .Tools }}<|start_header_id|>system<|end_header_id|>
+        {{- if .System }}
+
+        {{ .System }}
+        {{- end }}
+        {{- if .Tools }}
+
+        Cutting Knowledge Date: December 2023
+
+        When you receive a tool call response, use the output to format an answer to the orginal user question.
+
+        You are a helpful assistant with tool calling capabilities.
+        If given tasks and goals, you will use tools to achieve them.
+        {{- end }}<|eot_id|>
+        {{- end }}
+        {{- range $i, $_ := .Messages }}
+        {{- $last := eq (len (slice $.Messages $i)) 1 }}
+        {{- if eq .Role "user" }}<|start_header_id|>user<|end_header_id|>
+        {{- if and $.Tools $last }}
+
+        Given the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.
+
+        Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}. Do not use variables. Parameters should be a dictionary not a json string of a dictionary.
+
+        {{ range $.Tools }}
+        {{- . }}
+        {{ end }}
+        Question: {{ .Content }}<|eot_id|>
+        {{- else }}
+
+        {{ .Content }}<|eot_id|>
+        {{- end }}{{ if $last }}<|start_header_id|>assistant<|end_header_id|>
+
+        {{ end }}
+        {{- else if eq .Role "assistant" }}<|start_header_id|>assistant<|end_header_id|>
+        {{- if .ToolCalls }}
+        {{ range .ToolCalls }}
+        {"name": "{{ .Function.Name }}", "parameters": {{ .Function.Arguments }}}{{ end }}
+        {{- else }}
+
+        {{ .Content }}
+        {{- end }}{{ if not $last }}<|eot_id|>{{ end }}
+        {{- else if eq .Role "tool" }}<|start_header_id|>ipython<|end_header_id|>
+
+        {{ .Content }}<|eot_id|>{{ if $last }}<|start_header_id|>assistant<|end_header_id|>
+
+        {{ end }}
+        {{- end }}
+        {{- end }}
+
+    # When you receive a tool call response, use the output to format an answer to the orginal user question.
+
+    # You are a helpful assistant with tool calling capabilities.
+    # {{- end }}<|eot_id|>
+    # {{- end }}
+    # {{- range $i, $_ := .Messages }}
+    # {{- $last := eq (len (slice $.Messages $i)) 1 }}
+    # {{- if eq .Role "user" }}<|start_header_id|>user<|end_header_id|>
+    # {{- if and $.Tools $last }}
+
+    # Given the following functions, please respond with a JSON for a function call with its proper arguments that best answers the given prompt.
+
+    # Respond in the format {"name": function name, "parameters": dictionary of argument name and its value}. Do not use variables.
+
+    # {{ range $.Tools }}
+    # {{- . }}
+    # {{ end }}
+    # Question: {{ .Content }}<|eot_id|>
+    # {{- else }}
+
+    # {{ .Content }}<|eot_id|>
+    # {{- end }}{{ if $last }}<|start_header_id|>assistant<|end_header_id|>
+
+    # {{ end }}
+    # {{- else if eq .Role "assistant" }}<|start_header_id|>assistant<|end_header_id|>
+    # {{- if .ToolCalls }}
+    # {{ range .ToolCalls }}
+    # {"name": "{{ .Function.Name }}", "parameters": {{ .Function.Arguments }}}{{ end }}
+    # {{- else }}
+
+    # {{ .Content }}
+    # {{- end }}{{ if not $last }}<|eot_id|>{{ end }}
+    # {{- else if eq .Role "tool" }}<|start_header_id|>ipython<|end_header_id|>
+
+    # {{ .Content }}<|eot_id|>{{ if $last }}<|start_header_id|>assistant<|end_header_id|>
+
+    # {{ end }}
+    # {{- end }}
+    # {{- end }}%
   - name: qwen2.5-coder 1.5b
     provider: ollama
     model: qwen2.5-coder:1.5b
@@ -117,10 +383,14 @@ models:
       - chat
       - edit
       - apply
+      - autocomplete
     defaultCompletionOptions:
       contextLength: 16384
-      maxTokens: 8192
+      maxTokens: 4192
       stream: true
+    env:
+      OLLAMA_KV_CACHE_TYPE: f16"
+      OLLAMA_FLASH_ATTENTION: 1
 context:
   - provider: code
   - provider: docs
@@ -129,6 +399,8 @@ context:
   - provider: problems
   - provider: folder
   - provider: codebase
+  - provider: tree
+  - provider: repo-map
 data:
   - name: Local Data Bank
     destination: file:///Users/conor.fehilly/Documents/repos/mcp-examples/.continue/data_stores

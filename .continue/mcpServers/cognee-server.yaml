@@ -1,0 +1,15 @@
+# https://blog.continue.dev/cognee-mcp-is-my-new-ai-memory/
+name: cognee
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: cognee
+    command: uv
+    args:
+      - --directory
+      - /path/to/your/cognee-mcp
+      - run
+      - cognee
+    env:
+      TOKENIZERS_PARALLELISM: "false"
+      LLM_API_KEY: "sk-your-api-key"

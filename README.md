@@ -30,7 +30,7 @@ We’ll use [`uv`](https://github.com/astral-sh/uv), a superfast Python package 
 Install `uv`:
 
 ```bash
-brew install astral-sh/uv/uv
+brew install uv
 ```
 
 Once the repo is cloned, for each service check the relevant README.md to see service specific setup.
@@ -41,8 +41,8 @@ Once the repo is cloned, for each service check the relevant README.md to see se
 
 Please install the following extensions:
 
-- [Continue](https://marketplace.visualstudio.com/items?itemName=Continue.continue) – highly configurable Agent interface
-- [Cline](https://marketplace.visualstudio.com/items?itemName=clineb.cline) – Heavy duty task and workflow agent interface
+- [Continue](https://marketplace.visualstudio.com/items?itemName=Continue.continue) – Highly configurable Agent interface
+- [Cline](https://marketplace.visualstudio.com/items?itemName=clineb.cline) (optional) - Heavy duty task and workflow agent interface
 - GitHub Copilot (optional)
 
 ---
@@ -68,43 +68,82 @@ Additionally running the server via the command line gives access to more logs.
 ---
 
 ### ✅ 5. Download Models
+Models tend to be large and may take time to download.
 
-Please download the models below **before** the session — they are large and may take time:
-
+The models I use most often:
 ```bash
 ollama pull qwen3:8b
 ollama pull qwen2.5-coder:1.5b
 ollama pull qwen2.5-coder:7b
+ollama pull nomic-embed-text
 ```
+This is my current go to and is based on having 18GB of unified memory - if you have less you will need to scale down.
+I have managed to also get qen3:14 running for some tasks.
 
-This is based on having 18GB of unified memory - if you have less you will need to scale down.
-Make sure you have qwen3 and at least one other model.
+Take a look online for recommendations or the model specs, or read the next section.
+
+
+### Selecting a Model
+Some important hyperparameters of models include:
+- Number of parameters (🤖)
+- Context window size (📖)
+- Quantization level (🗂️)
+
+These factors impact memory and/or VRAM usage, determining which models you can run. By adjusting one down, you might allow yourself to increase another.
+
+Consider your use case requirements when making a decision. The [VRAM estimator](https://smcleod.net/2024/12/bringing-k/v-context-quantisation-to-ollama/#interactive-vram-estimator) can help with calculations.
+Ollama also provides a rough [model selection guide](https://github.com/ollama/ollama?tab=readme-ov-file#model-library).
+
+For model selection, consider its intended purpose (💡) and whether it has tool calling capabilities. You can search for models on the [Ollama website](https://ollama.com/search).
+
+
+#### Recommended models
+Generally speaking my experience and recommendation is as follows:
+- **qwen3:8b & qwen3:14b**
+  - The only open source Ollama models that work in Chat, Plan and Agent modes
+  - Good for plan and act approaches
+  - Sometimes need to be told not to think concisely and avoid thought loops
+  - Struggle with full context windows
+    - Be careful with registering too many rules and/or tools as they will be included in every system prompt.
+  - Benefit from frequent session resets
+  - Are very receptive to Markdown
+- **qwen2.5-coder:1.5b**
+  - Nice small model for autocompletes - you may need to adjust timeouts and other settings for them to succeed
+- **qwen2.5-coder:7b**
+  - Strong performing coder and relatively fast.
+  - Unline qwen3, it doesn't have a thinking stage which means you are less likely to get the LLM's thoughts in your edit
+  - Good for edits and applies
+- **nomic-embed-text**
+  - Recommended by Ollama, continue.dev and others as a replacement for the default embeddings used for the @codebase index
+
 
 ## 📂 What’s in This Repo
-
 Once cloned, this repo will include at the root:
 
-- **Directories**:
-  - `agent-cli/`: Command-line interface tools for interacting with the agent.
-  - `agent-web-interface/`: Web-based interface or API for managing the agent.
-  - `fastmcp-util-server/`: Backend server for utility functions related to fastmcp.
-  - `mcp-sentiment-server/`: Server for sentiment analysis or machine learning tasks (MCP).
-  - `.continue/`: Configuration directory for the continue extension, defining MCP Components
-  - `.taskmaster/`: Taskmaster-ai workspace for managing tasks and workflows.
-  - `.cursor/`: Likely related to code navigation or UI components (e.g., cursor-based tools).
-  - `.clinerrules/`: Configuration directory for cline rules (code formatting/linting).
+## Directories
+  - `agent-cli/`: Command-line interface tools for interacting with the agent. Contains `.python-version`, `README.md`, `package.json`, `pyproject.toml`, and an `agent/` directory with `PROMPT.md` and `agent.json`.
+  - `agent-web-interface/`: Web-based interface or API for managing the agent. Includes `agent_config.py`, `host.py`, `main.py`, `.python-version`, `README.md`, and `pyproject.toml`.
+  - `fastmcp-util-server/`: Backend server for utility functions related to fastmcp. Contains `main.py`, `.python-version`, `README.md`, `pyproject.toml`, and `server-info.json`.
+  - `mcp-sentiment-server/`: Server for sentiment analysis or machine learning tasks (MCP). Includes `main.py`, `.python-version`, `Dockerfile`, `README.md`, ajd `pyproject.toml`.
+  - `.continue/`: Configuration directory for the continue extension, defining MCP Components.
+  - `.taskmaster/`: Taskmaster-ai workspace for managing tasks and workflows. Contains `state.json`, `templates/`, `tasks/`, and `docs/`.
+  - `.cursor/`: Likely related to code navigation or UI components (e.g., cursor-based tools). Contains `mcp.json` and a `rules/` directory with files like `cursor_rules.mdc`, `self_improve.mdc`, and workflow definitions.
+  - `.clinerrules/`: Configuration directory for cline rules (code formatting/linting). Contains `documentation_guidelines.md` and `expand-requirements-to-mcp-prompt.md`.
 
-- **Configuration Files**:
+
+## Configuration Files
   - `.env.example`: Sample environment variables for development setup.
   - `docker-compose.yml`: Docker configuration for containerized services (not complete).
-
-- **Documentation**:
-  - `README.md`: This file (current location).
-  - `gotchas.md`: Notes on common pitfalls, setup issues, or best practices.
-
-- **Other Files**:
-  - `memory.jsonl`: Stores memory data for @modelcontextprotocol/server-memory (can be configured)
   - `.clineignore`: File specifying files to ignore for cline tools.
+  - `Makefile`: Build automation tool for compiling and packaging the project.
+  - `memory.jsonl`: Stores memory data for `@modelcontextprotocol/server-memory` (can be configured).
+
+## Documentation
+  - `README.md`: This file (current location).
+  - `GOTCHAS.md`: Notes on common pitfalls, setup issues, or best practices.
+  - `docs/definitions.md`: Definitions and explanations of key concepts.
+  - `docs/report.md`: Report or analysis documentation.
+  - `TODO`: List of tasks or improvements to be addressed.
 
 ---
 
@@ -174,6 +213,12 @@ I think that ./continue best exhibits the configuration of these capabilities:
 ## Debugging
 The following might be useful for debugging.
 
+### Activity Monitor
+It is incredibly important to monitor your memory usage and adjust your prompts/models appropriately.
+Use the Activity Monitor program to view memory usage via the Memory tab.
+This also helps you to identify if any models are secretely running in the background.
+
+
 ### VS Code Developer Console
 Almost all interactions will be viewable via the Developer Console.
 In order to view debug logs, which contain extra information, click the dropdown at the top that says “Default levels” and select “Verbose”.
@@ -183,6 +228,27 @@ To enable:
 3. Select the Console tab
 4. Click the dropdown at the top that says “Default levels” and select “Verbose”.
 5. Read the console logs
+
+### continue Events Data Store 
+continue allows us to configure data stores that all or a selection of agent events are stored.
+
+For example this config sends all events to a directory in this repo:
+```yaml .continue/assistants/config.yaml
+data:
+  - name: Local Data Bank
+    destination: file:///Users/conor.fehilly/Documents/repos/mcp-examples/.continue/data_stores
+    schema: 0.2.0
+    level: all
+```
+
+There will be a jsonl file for each event type:
+- chatFeedback.jsonl
+- chatInteraction.jsonl
+- editInteraction.jsonl
+- editOutcome.jsonl
+- tokensGenerated.jsonl
+- toolUsage.jsonl
+
 
 ### Ollama
 Ensure you run Ollama via the command line:
@@ -222,14 +288,70 @@ You can run it via:
 npx @modelcontextprotocol/inspector
 ```
 
-Alternatively, `fastmcp-util-server` has MCP Inspector support by default which you can access by:
+Alternatively, `fastmcp-util-server` has MCP Inspector support by default, but only over STDIO, which you can access by:
 ```bash
 cd fastmcp-util-server
-uv run fastmcp dev main.py:mcp --transport http
+uv run fastmcp dev main.py:mcp
 ```
 
 MCP Inspector will open in your browser on http://localhost:6274/ by default.
 
+## Performance
+In some situations the following can improve performance.
+
+### Embeddings
+continue recommends for Ollama using `nomic-embed-text`,
+```bash
+  - name: Nomic Embed Text
+    provider: ollama
+    model: nomic-embed-text
+    roles:
+      - embed
+    apiBase: http://0.0.0.0:11434
+```
+
+### Flash Attention
+Before launching the Ollama server run:
+```bash
+export OLLAMA_FLASH_ATTENTION=1
+```
+This may have been switched on by default depending on your model.
+When on, the attention mechanism changes to one which uses less VRAM and is quicker.
+
+
+### Quantisation
+This controls how the context cache is quantised:
+- f16 - high precision and memory usage (default).
+- q8_0 - 8-bit quantization, uses approximately 1/2 the memory of f16 with a very small loss in precision, this usually has no noticeable impact on the model's quality (recommended if not using f16).
+- q4_0 - 4-bit quantization, uses approximately 1/4 the memory of f16 with a small-medium loss in precision that may be more noticeable at higher context sizes.
+
+Quantisation reduces the context cache memory footprint and VRAM usage, enabling larger context usage.
+Set this to the type of quantisation you want:
+```bash
+export OLLAMA_KV_CACHE_TYPE="q8_0"
+```
+`OLLAMA_FLASH_ATTENTION` must be set.
+
+For more details on when and how you should or should not use quantisation, read this [article](https://smcleod.net/2024/12/bringing-k/v-context-quantisation-to-ollama/), which also has an [interactive vram estimator](https://smcleod.net/2024/12/bringing-k/v-context-quantisation-to-ollama/#interactive-vram-estimator)
+
+### Context Size
+Context size, and how much of that context is being used, have a quite a few impacts on performance - both on tokens per second and the content that is generated.
+
+Smaller context size will mean fewer tokens can be processed in a single interaction, which can lead to faster response times but may limit the model's ability to understand longer or more complex conversations. This is particularly important in scenarios where the user expects concise, direct answers rather than nuanced, multi-turn dialogues.
+
+With a larger context size you can process more tokens in a single interaction, which can improve the model's ability to understand and generate more coherent, contextually rich responses but may increase latency and resource usage. This is beneficial for tasks requiring deep reasoning, multi-step problem-solving, or maintaining context across extended interactions, but may not be optimal for real-time or low-latency applications.
+
+You should consider the following when deciding on context size:
+- **Available VRAM**: Larger context sizes require more memory, so ensure your system can handle the chosen model's requirements.
+- **Use Case**: Prioritize speed for rapid, straightforward queries or richer context for complex tasks.
+- **Quantization**: Pair larger context sizes with lower-precision quantization (e.g., q4_0) to balance performance and resource constraints.
+- **Model Capabilities**: Some models are optimized for specific context lengths; consult the model's documentation for recommended settings.
+- **User Experience**: Balance response quality with interaction speed based on your application's goals.
+
+By carefully tuning context size alongside quantization and flash attention settings, you can optimize both performance and output quality for your specific workload.
+
+---
+https://docs.continue.dev/guides/cli 👀
 ---
 
 Need help before we start? Reach out on gchat to me.
