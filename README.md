@@ -7,13 +7,13 @@ Welcome! This repo contains everything you need to follow along during the **Loc
 
 ---
 
-## ⚙️ Prerequisites
+## ⚙️ Prerequisites 🛠️
 
 If you'd like to follow along please complete the following **before** the session to ensure you can.
 
 ---
 
-### ✅ 1. Homebrew
+### ✅ 1. Homebrew 🍺
 
 If you don’t already have Homebrew:
 
@@ -23,7 +23,7 @@ If you don’t already have Homebrew:
 
 ---
 
-### ✅ 2. Python (via `uv`)
+### ✅ 2. Python (via `uv`) 🐍
 
 We’ll use [`uv`](https://github.com/astral-sh/uv), a superfast Python package and virtual environment manager.
 
@@ -37,7 +37,7 @@ Once the repo is cloned, for each service check the relevant README.md to see se
 
 ---
 
-### ✅ 3. VS Code + Extensions
+### ✅ 3. VS Code + Extensions 💻
 
 Please install the following extensions:
 
@@ -47,7 +47,7 @@ Please install the following extensions:
 
 ---
 
-### ✅ 4. Ollama (LLM Runtime)
+### ✅ 4. Ollama (LLM Runtime) 🤖
 
 Install Ollama:
 
@@ -67,7 +67,8 @@ Additionally running the server via the command line gives access to more logs.
 
 ---
 
-### ✅ 5. Download Models
+### ✅ 5. Download Models 📥
+
 Models tend to be large and may take time to download.
 
 The models I use most often:
@@ -83,7 +84,8 @@ I have managed to also get qen3:14 running for some tasks.
 Take a look online for recommendations or the model specs, or read the next section.
 
 
-### Selecting a Model
+### Selecting a Model 🔍
+
 Some important hyperparameters of models include:
 - Number of parameters (🤖)
 - Context window size (📖)
@@ -97,7 +99,7 @@ Ollama also provides a rough [model selection guide](https://github.com/ollama/o
 For model selection, consider its intended purpose (💡) and whether it has tool calling capabilities. You can search for models on the [Ollama website](https://ollama.com/search).
 
 
-#### Recommended models
+#### Recommended models 📋
 Generally speaking my experience and recommendation is as follows:
 - **qwen3:8b & qwen3:14b**
   - The only open source Ollama models that work in Chat, Plan and Agent modes
@@ -116,11 +118,13 @@ Generally speaking my experience and recommendation is as follows:
 - **nomic-embed-text**
   - Recommended by Ollama, continue.dev and others as a replacement for the default embeddings used for the @codebase index
 
+---
 
-## 📂 What’s in This Repo
+## 📂 What’s in This Repo 📁
+
 Once cloned, this repo will include at the root:
 
-## Directories
+### Directories 📁
   - `agent-cli/`: Command-line interface tools for interacting with the agent. Contains `.python-version`, `README.md`, `package.json`, `pyproject.toml`, and an `agent/` directory with `PROMPT.md` and `agent.json`.
   - `agent-web-interface/`: Web-based interface or API for managing the agent. Includes `agent_config.py`, `host.py`, `main.py`, `.python-version`, `README.md`, and `pyproject.toml`.
   - `fastmcp-util-server/`: Backend server for utility functions related to fastmcp. Contains `main.py`, `.python-version`, `README.md`, `pyproject.toml`, and `server-info.json`.
@@ -131,14 +135,14 @@ Once cloned, this repo will include at the root:
   - `.clinerrules/`: Configuration directory for cline rules (code formatting/linting). Contains `documentation_guidelines.md` and `expand-requirements-to-mcp-prompt.md`.
 
 
-## Configuration Files
+### Configuration Files 📄
   - `.env.example`: Sample environment variables for development setup.
   - `docker-compose.yml`: Docker configuration for containerized services (not complete).
   - `.clineignore`: File specifying files to ignore for cline tools.
   - `Makefile`: Build automation tool for compiling and packaging the project.
   - `memory.jsonl`: Stores memory data for `@modelcontextprotocol/server-memory` (can be configured).
 
-## Documentation
+### Documentation 📖
   - `README.md`: This file (current location).
   - `GOTCHAS.md`: Notes on common pitfalls, setup issues, or best practices.
   - `docs/definitions.md`: Definitions and explanations of key concepts.
@@ -147,30 +151,32 @@ Once cloned, this repo will include at the root:
 
 ---
 
-## MCP and This Repo
+## MCP and This Repo 🤖
+
 This repository is designed to give examples of how to implement MCP Components and Capabilities,
 along with Agents to use them, and integrate this within VS Code.
 Some of the below and other aspects are inspired by https://huggingface.co/mcp-course.
 
-### Components
-The three Components in MCP are:
-- Host
-- Client
-- Server
+### Components 🧱
 
-#### Host
+The three Components in MCP are:
+- **Host**
+- **Client**
+- **Server**
+
+#### Host 🏠
 The user-facing AI application that end-users interact with directly. Examples include Anthropic’s Claude Desktop,
 AI-enhanced IDEs like Cursor, inference libraries like Hugging Face Python SDK, or custom applications built in
 libraries like LangChain or smolagents. Hosts initiate connections to MCP Servers and orchestrate the overall flow
 between user requests, LLM processing, and external tools.
 
 Some examples of hosts within this repository are:
-- agent-web-interface: a simple chat host with a web interface
-- agent-cli: an extremely lightweight host with a CLI
-- continue: VS Code extension, configured via .continue
-- cline: VS Code extension
+- `agent-web-interface`: a simple chat host with a web interface
+- `agent-cli`: an extremely lightweight host with a CLI
+- `continue`: VS Code extension, configured via `.continue`
+- `cline`: VS Code extension
 
-#### Client
+#### Client 📱
 A component within the host application that manages communication with a specific MCP Server.
 Each Client maintains a 1:1 connection with a single Server, handling the protocol-level details
 of MCP communication and acting as an intermediary between the Host’s logic and the external Server.
@@ -180,46 +186,49 @@ notice that Hosts often expect configuration of MPC Servers and LLMs, and this c
 by the Client
 
 Some examples of clients configurations within this repository are:
-- agent-web-interface/agent_config.py
-- agent-cli/agent/agent.json
-- .continue/assistants and .continue/mcpServers
+- `agent-web-interface/agent_config.py`
+- `agent-cli/agent/agent.json`
+- `.continue/assistants` and `.continue/mcpServers`
 
-cline also exposes some configuration somewhere.
+`cline` also exposes some configuration somewhere.
 
-#### Server
+#### Server 🏢
 An external program or service that exposes capabilities (Tools, Resources, Prompts) via the MCP protocol.
 
 Some examples of local Servers defined within this repository are:
-- mcp-sentiment-server: simple Gradio SSE MCP server with a sentiment-analysis tool (which is not very good)
-- fastmcp-util-server: modern fastmcp http-streaming MCP server with local util tools
+- `mcp-sentiment-server`: simple Gradio SSE MCP server with a sentiment-analysis tool (which is not very good)
+- `fastmcp-util-server`: modern fastmcp http-streaming MCP server with local util tools
 
 Some examples of external Servers defined within this repository are:
-- @modelcontextprotocol/server-memory: Knowledge Graph memory for an agent
-- taskmaster-ai: Task management tool for agents
+- `@modelcontextprotocol/server-memory`: Knowledge Graph memory for an agent
+- `taskmaster-ai`: Task management tool for agents
 
+### Capabilities 🎯
 
-### Capabilities
 MCP defines the following Capabilities:
-- Tools: Executable functions that the AI model can invoke to perform actions or retrieve computed data
-- Resources: Read-only data sources that provide context without significant computation.
-- Prompts: Pre-defined templates or workflows that guide interactions between users, AI models, and the available capabilities.
-- Sampling: erver-initiated requests for the Client/Host to perform LLM interactions, enabling recursive actions where the LLM can review generated content and make further 
+- **Tools**: Executable functions that the AI model can invoke to perform actions or retrieve computed data
+- **Resources**: Read-only data sources that provide context without significant computation.
+- **Prompts**: Pre-defined templates or workflows that guide interactions between users, AI models, and the available capabilities.
+- **Sampling**: Server-initiated requests for the Client/Host to perform LLM interactions, enabling recursive actions where the LLM can review generated content and make further 
 
-I think that ./continue best exhibits the configuration of these capabilities:
-- ./continue/mcpServers expose **Tools**
-- ./continue/docs and various .md files in the repo act as **Resources** that provide context
-- ./continue/prompts and ./continue/rules are **Prompts** that initiate and constraint, respectively, interactions with the AI models
+I think that `./continue` best exhibits the configuration of these capabilities:
+- `./continue/mcpServers` expose **Tools**
+- `./continue/docs` and various `.md` files in the repo act as **Resources** that provide context
+- `./continue/prompts` and `./continue/rules` are **Prompts** that initiate and constraint, respectively, interactions with the AI models
 
-## Debugging
+---
+
+## Debugging 🔍
+
 The following might be useful for debugging.
 
-### Activity Monitor
+### Activity Monitor 📊
 It is incredibly important to monitor your memory usage and adjust your prompts/models appropriately.
 Use the Activity Monitor program to view memory usage via the Memory tab.
-This also helps you to identify if any models are secretely running in the background.
+This also helps you to identify if any models are secretly running in the background.
 
 
-### VS Code Developer Console
+### VS Code Developer Console 📱
 Almost all interactions will be viewable via the Developer Console.
 In order to view debug logs, which contain extra information, click the dropdown at the top that says “Default levels” and select “Verbose”.
 To enable:
@@ -229,8 +238,8 @@ To enable:
 4. Click the dropdown at the top that says “Default levels” and select “Verbose”.
 5. Read the console logs
 
-### continue Events Data Store 
-continue allows us to configure data stores that all or a selection of agent events are stored.
+### continue Events Data Store 📁
+`continue` allows us to configure data stores that all or a selection of agent events are stored.
 
 For example this config sends all events to a directory in this repo:
 ```yaml .continue/assistants/config.yaml
@@ -242,15 +251,14 @@ data:
 ```
 
 There will be a jsonl file for each event type:
-- chatFeedback.jsonl
-- chatInteraction.jsonl
-- editInteraction.jsonl
-- editOutcome.jsonl
-- tokensGenerated.jsonl
-- toolUsage.jsonl
+- `chatFeedback.jsonl`
+- `chatInteraction.jsonl`
+- `editInteraction.jsonl`
+- `editOutcome.jsonl`
+- `tokensGenerated.jsonl`
+- `toolUsage.jsonl`
 
-
-### Ollama
+### Ollama 🤖
 Ensure you run Ollama via the command line:
 ```bash
 ollama serve
@@ -262,7 +270,7 @@ You can check for running models via:
 ollama ps
 ```
 
-Sometimes stopping exection via Hosts isn't enough and the model will still be running.
+Sometimes stopping execution via Hosts isn't enough and the model will still be running.
 In this case you can stop running models via Ollama, for example:
 ```bash
 ollama stop qwen3:14b
@@ -273,13 +281,13 @@ And if that doesn't work, in the running Ollama server:
 CTRL-C
 ```
 
-### Continue Console
+### Continue Console 📱
 As at https://docs.continue.dev/troubleshooting, to enable the Continue Console:
 1. `cmd` + `shift` + `P` -> Search for and then select “Continue: Enable Console” and enable
 3. `cmd` + `shift` + `P` -> Reload the window
 4. `cmd` + `shift` + `P` -> Search for  “Continue: Focus on Continue Console View” to Open the Continue Console
 
-### MCP Inspector
+### MCP Inspector 🔍
 MCP Inspector provides an easy way to interact with MCP servers via a Web UI.
 You should use the same transports/entry commands for the MCP server as you have configured for the Host you are using.
 
@@ -296,11 +304,14 @@ uv run fastmcp dev main.py:mcp
 
 MCP Inspector will open in your browser on http://localhost:6274/ by default.
 
-## Performance
+---
+
+## Performance ⚡
+
 In some situations the following can improve performance.
 
-### Embeddings
-continue recommends for Ollama using `nomic-embed-text`,
+### Embeddings 📂
+`continue` recommends for Ollama using `nomic-embed-text`,
 ```bash
   - name: Nomic Embed Text
     provider: ollama
@@ -310,7 +321,7 @@ continue recommends for Ollama using `nomic-embed-text`,
     apiBase: http://0.0.0.0:11434
 ```
 
-### Flash Attention
+### Flash Attention ⚡
 Before launching the Ollama server run:
 ```bash
 export OLLAMA_FLASH_ATTENTION=1
@@ -319,11 +330,11 @@ This may have been switched on by default depending on your model.
 When on, the attention mechanism changes to one which uses less VRAM and is quicker.
 
 
-### Quantisation
+### Quantisation 📏
 This controls how the context cache is quantised:
-- f16 - high precision and memory usage (default).
-- q8_0 - 8-bit quantization, uses approximately 1/2 the memory of f16 with a very small loss in precision, this usually has no noticeable impact on the model's quality (recommended if not using f16).
-- q4_0 - 4-bit quantization, uses approximately 1/4 the memory of f16 with a small-medium loss in precision that may be more noticeable at higher context sizes.
+- `f16` - high precision and memory usage (default).
+- `q8_0` - 8-bit quantization, uses approximately 1/2 the memory of f16 with a very small loss in precision, this usually has no noticeable impact on the model's quality (recommended if not using f16).
+- `q4_0` - 4-bit quantization, uses approximately 1/4 the memory of f16 with a small-medium loss in precision that may be more noticeable at higher context sizes.
 
 Quantisation reduces the context cache memory footprint and VRAM usage, enabling larger context usage.
 Set this to the type of quantisation you want:
@@ -334,7 +345,7 @@ export OLLAMA_KV_CACHE_TYPE="q8_0"
 
 For more details on when and how you should or should not use quantisation, read this [article](https://smcleod.net/2024/12/bringing-k/v-context-quantisation-to-ollama/), which also has an [interactive vram estimator](https://smcleod.net/2024/12/bringing-k/v-context-quantisation-to-ollama/#interactive-vram-estimator)
 
-### Context Size
+### Context Size 📏
 Context size, and how much of that context is being used, have a quite a few impacts on performance - both on tokens per second and the content that is generated.
 
 Smaller context size will mean fewer tokens can be processed in a single interaction, which can lead to faster response times but may limit the model's ability to understand longer or more complex conversations. This is particularly important in scenarios where the user expects concise, direct answers rather than nuanced, multi-turn dialogues.
@@ -351,7 +362,7 @@ You should consider the following when deciding on context size:
 By carefully tuning context size alongside quantization and flash attention settings, you can optimize both performance and output quality for your specific workload.
 
 ---
-https://docs.continue.dev/guides/cli 👀
+🔗 [Continue CLI Docs](https://docs.continue.dev/guides/cli) 👀
 ---
 
 Need help before we start? Reach out on gchat to me.
