@@ -5,8 +5,22 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "celery>=5.5.3",
+    "django>=5.2.4",
+    "fastapi>=0.116.1",
     "fastmcp>=2.10.6",
+    "flask>=3.1.1",
     "gradio[mcp]>=5.39.0",
+    "matplotlib>=3.10.5",
     "mcp>=1.10.1",
+    "numpy>=2.3.2",
+    "pandas>=2.3.1",
+    "requests>=2.32.4",
+    "scikit-learn>=1.7.1",
+    "scipy>=1.16.1",
+    "seaborn>=0.13.2",
     "smolagents[litellm,mcp]>=1.20.0",
+    "sqlalchemy>=2.0.42",
+    "statsmodels>=0.14.5",
+    "uvicorn>=0.35.0",
 ]
