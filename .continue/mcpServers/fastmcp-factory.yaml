@@ -1,0 +1,10 @@
+name: Local fastmcp factory
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: Local fastmcp factory
+    type: stdio
+    command: npx
+    args:
+      - i
+      - fastmcp

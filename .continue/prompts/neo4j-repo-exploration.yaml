@@ -1,0 +1,66 @@
+name: Repo Exploration Plan
+version: 0.0.1
+schema: v1
+prompts:
+  - name:  Repo Exploration Plan
+    description: General methodology for analyzing a codebase
+    prompt: |
+      # **Repo Exploration Plan**  
+
+      ---
+
+      ## **1. Initial Setup & Tooling**  
+      - **Use read-only tools**:  
+        - `file_glob_search` to identify key file types (e.g., `*.py`, `*.js`).  
+        - `ls` to list directories and assess structure.  
+        - `grep_search` to find patterns (e.g., API endpoints, database connections).  
+
+      ---
+
+      ## **2. File Classification**  
+      - **Categorize files** by role:  
+        - **Server logic**: Files with main entry points (e.g., `main.py`, `server.js`).  
+        - **Utilities**: Helper functions (e.g., `utils.py`, `helpers.js`).  
+        - **Agents/Workflows**: Code with task queues, rules, or state management (e.g., `multi_agent.py`, `rule_improvement.py`).  
+        - **Tools/Utilities**: Code for search, code blocks, or versioning (e.g., `grepSearch.py`, `original.py`).  
+
+      ---
+
+      ## **3. Entity & Observation Identification**  
+      - **Entities**:  
+        - APIs, databases, configuration files, memory systems, rule engines.  
+        - Example: "Agent Memory" (entity) → "Stores task-specific code blocks" (observation).  
+      - **Observations**:  
+        - Code patterns (e.g., "UUID-based file naming for task isolation").  
+        - Dependencies (e.g., "Server depends on `dynamic_evaluation.py` for metrics").  
+
+      ---
+
+      ## **4. Iterative Analysis**  
+      - **Prioritize**:  
+        - Core server logic (e.g., `main.py`).  
+        - Memory/agent systems (e.g., `agent_code_blocks/`, `callbacks/`).  
+        - Tools
+        - Documentation
+        - Infrastructure as code (e.g. Terraform)
+        - Build scripts  
+        - Map dependencies between entities (e.g., "Agent Memory → Rule Engine").  
+
+      ---
+
+      ## **5. Documentation & Knowledge Graph**  
+      - **Document entities**:  
+        - Use `create_entities` tool to add nodes (e.g., "Agent Memory", "Rule Engine").  
+      - **Add observations**:  
+        - Use `add_observations` tool to note patterns (e.g., "UUID-based code blocks for task isolation").  
+      - **Map relations**:  
+        - Use `create_relations`tool to show connections (e.g., "Agent Memory → Rule Engine").  
+
+      ---
+
+      ## **6. Next Steps**  
+      1. **loops/iterations**:  Iterate and repeat for other areas of the codebase.  
+      2. **Refine knowledge graph**: Add more entities.  
+      3. **Track progress**: Track progress as a memory so you can ensure you do not repeat work
+
+      ---

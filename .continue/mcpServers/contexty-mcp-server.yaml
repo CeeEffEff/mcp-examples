@@ -3,8 +3,8 @@ version: 0.0.1
 schema: v1
 mcpServers:
   - name: context7
-    command: npx
+    command: "npx"
     args:
-      - -y
+      - "-y"
       - "@upstash/context7-mcp@latest"
     env: {}

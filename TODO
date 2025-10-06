@@ -13,3 +13,5 @@
 [ ] Setup cognee and replace old style stores?
 [ ] Try and unify some directories
 [ ] Try SmolLm3
+[ ] Use custom prompt template (ones that have examples that return values)
+[ ] https://huggingface.co/docs/smolagents/en/tutorials/inspect_runs

@@ -7,3 +7,4 @@ mcpServers:
     args:
       - -y
       - task-master-ai
+    type: stdio

@@ -2,13 +2,7 @@ from smolagents import (
     CodeAgent,
     LiteLLMModel,
     MCPClient,
-    AUTHORIZED_TYPES,
-    UserInputTool,
-    FinalAnswerTool,
-    PythonInterpreterTool,
-    ApiWebSearchTool,
     ToolCallingAgent,
-    PromptTemplates,
 )
 from agent_config import (
     LOCAL_AGENT,

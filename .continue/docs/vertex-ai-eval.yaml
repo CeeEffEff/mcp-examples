@@ -1,0 +1,6 @@
+name: Vertex AI Eval less
+version: 0.0.1
+schema: v1
+docs:
+  - name: Vertex AI Eval less
+    startUrl: https://cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview

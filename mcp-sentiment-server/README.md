@@ -21,7 +21,7 @@ uv run main.py
 ```
 
 ### View the Server Schema
-The capabilities sof your MCP server are compiled into a schema.
+The capabilities of your MCP server are compiled into a schema.
 This schema dictates to an agent how to interact with the server.
 
 You can view it at: http://localhost:7860/gradio_api/mcp/schema
@@ -37,6 +37,64 @@ The most common use in MCP is for Sampling, which is where the Server requests t
 
 The stream of SSE is viewable at: http://localhost:7860/gradio_api/mcp/sse
 
+## Core Functionality
+
+The server implements a sentiment analysis tool using TextBlob for NLP processing. Here's how it works:
+
+### Sentiment Analysis Function
+```python
+def sentiment_analysis(text: str) -> dict:
+    """
+    Analyze the sentiment of the given text.
+
+    Args:
+        text (str): The text to analyze
+
+    Returns:
+        dict: A dict string containing polarity, subjectivity, and assessment.
+            Use these values to assess the sentiment of the text:
+              - Polarity ranges from -1 (negative) to 1 (positive).
+              - Assessment indicates whether the sentiment is positive, negative, or neutral.
+              - Subjectivity ranges from 0 (objective) to 1 (subjective).
+    """
+    blob = TextBlob(text)
+    sentiment = blob.sentiment
+
+    result = {
+        "polarity": round(sentiment.polarity, 2),  # -1 (negative) to 1 (positive)
+        "subjectivity": round(sentiment.subjectivity, 2),  # 0 (objective) to 1 (subjective)
+        "assessment": "positive" if sentiment.polarity > 0 else "negative" if sentiment.polarity < 0 else "neutral",
+    }
+
+    return result
+```
+
+### Gradio Interface
+The server provides a simple web interface for testing:
+```python
+demo = gr.Interface(
+    fn=sentiment_analysis,
+    inputs=gr.Textbox(placeholder="Enter text to analyze..."),
+    outputs=gr.JSON(),
+    title="Text Sentiment Analysis",
+    description="Analyze the sentiment of text using TextBlob",
+)
+```
+
+## Server Capabilities & Integration
+
+### Web Interface
+You can interact with the server directly through the web UI:
+- Accessible at: http://localhost:7860/?lang=mcp
+- Allows manual testing of sentiment analysis
+- Shows real-time results from the `sentiment_analysis` function
+
+### Server-Sent Events (SSE)
+The server supports streaming interactions through SSE:
+- Stream endpoint: http://localhost:7860/gradio_api/mcp/sse
+- Used for:
+  - Agent communication
+  - LLM sampling (pushing results to clients)
 
 ## Registering the MCP Server
 
@@ -79,3 +137,13 @@ To configure:
 }
 ```
 Once configured, you can ask, for example, Cursor to use your sentiment analysis tool for tasks like analyzing code comments, user feedback, or pull request descriptions.
+
+## Tutorial Workflow Mapping
+
+| Tutorial Step                | Code Component                     | Description |
+|-----------------------------|------------------------------------|-------------|
+| Local LLM setup             | `pyproject.toml`, `Dockerfile`     | Dependency management and containerization |
+| VS Code integration        | `mcp.json` configuration           | Registering MCP server for VS Code extensions |
+| Web UI testing              | Gradio interface in `main.py`      | Manual sentiment analysis |
+| Agent communication         | SSE endpoint (`/gradio_api/mcp/sse`) | Server-Sent Events for agent interaction |
+| MCP schema usage           | `/gradio_api/mcp/schema`           | Discovering server capabilities |

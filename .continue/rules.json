@@ -1,0 +1,7 @@
+
+{
+    "rules": [
+        {"name": "no_hallucination", "description": "Ensure responses are factually accurate"},
+        {"name": "respect_privacy", "description": "Avoid sharing personal information"}
+    ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "mcp-examples",
+  "version": "1.0.0",
+  "description": "Welcome! This repo contains everything you need to follow along during the **Local AI Workshop**. By the end, you'll have a fully local LLM setup including:",
+  "homepage": "https://github.com/CeeEffEff/mcp-examples#readme",
+  "bugs": {
+    "url": "https://github.com/CeeEffEff/mcp-examples/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CeeEffEff/mcp-examples.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

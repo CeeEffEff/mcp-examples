@@ -210,6 +210,15 @@ I think that ./continue best exhibits the configuration of these capabilities:
 - ./continue/docs and various .md files in the repo act as **Resources** that provide context
 - ./continue/prompts and ./continue/rules are **Prompts** that initiate and constraint, respectively, interactions with the AI models
 
+## Neo4j
+
+```
+docker run \
+    --publish=7474:7474 --publish=7687:7687 \
+    --volume=$HOME/neo4j/data:/data \
+    neo4j
+```
+
 ## Debugging
 The following might be useful for debugging.
 
@@ -355,3 +364,7 @@ https://docs.continue.dev/guides/cli 👀
 ---
 
 Need help before we start? Reach out on gchat to me.
+-----
+
+
+brew install mcp-toolbox

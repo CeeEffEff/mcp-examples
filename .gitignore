@@ -237,6 +237,9 @@ dev-debug.log
 .taskmaster/docs/docker_prd.txt
 .taskmaster/docs/incorrect-venv_prd.txt
 
+agent-web-interface/agent_code_blocks/*
+agent-web-interface/agent_memory/*
+
 # Task files
 # tasks.json
 # tasks/ 
