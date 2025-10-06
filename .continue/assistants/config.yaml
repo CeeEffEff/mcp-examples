@@ -12,6 +12,8 @@ models:
     roles:
       - embed
     apiBase: http://0.0.0.0:11434
+    defaultCompletionOptions:
+      contextLength: 2048
   - name: deepseek-r1 7b
     provider: ollama
     model:  deepseek-r1:7b
@@ -211,7 +213,23 @@ models:
         - Update README.md and `docs` files to reflect changes in the repository.
         - If documentation is missing or outdated, document the issue and request an update from the Product Manager.
 
-  
+  - name: qwen3-max-context 14b
+    provider: ollama
+    model: qwen3-max-context:14b
+    apiBase: http://0.0.0.0:11434
+    env:
+      OLLAMA_KV_CACHE_TYPE: "q4_0"
+      OLLAMA_FLASH_ATTENTION: 1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 40960
+      maxTokens: 8192
+      stream: true
 
   - name: qwen3 14b
     provider: ollama
