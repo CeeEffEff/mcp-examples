@@ -63,8 +63,8 @@ An intelligent agent system leveraging a digital twin of a GCP environment (Neo4
 
 ### Phase I: Foundation (Months 1-3)
 - ✅ Project initialization and planning
-- ⏱️ Neo4j schema design for GCP resources
-- ⏱️ Data ingestion pipeline
+- ✅ Neo4j schema design for GCP resources
+- ✅ Data ingestion pipeline (integrated and tested)
 - ⏱️ Basic graph visualization
 
 ### Phase II: Agent Training (Months 4-6)
@@ -106,6 +106,98 @@ An intelligent agent system leveraging a digital twin of a GCP environment (Neo4
 - **Training Methods**: `.taskmaster/docs/llm_training.md`
 - **Claude Instructions**: `CLAUDE.md`
 
+## Data Ingestion Pipeline
+
+The GCP Digital Twin ingestion pipeline is now fully integrated and operational. It consists of 5 major components:
+
+### Pipeline Components
+
+1. **GCP API Client** (`src/ingestion_pipeline/api_client/`)
+   - Service account authentication
+   - Rate limiting and retry logic
+   - Resource fetching from GCP APIs
+   - Pagination support
+
+2. **Event Subscription System** (`src/ingestion_pipeline/event_system/`)
+   - Pub/Sub integration for real-time events
+   - Asynchronous message processing
+   - Callback registry for resource types
+   - Health monitoring
+
+3. **Data Transformation Layer** (`src/ingestion_pipeline/transformation/`)
+   - Pydantic schemas for validation
+   - Resource transformation to Neo4j format
+   - Relationship extraction
+   - Data integrity validation
+
+4. **Neo4j Batch Operations** (`src/ingestion_pipeline/neo4j_ops/`)
+   - Connection pooling
+   - Batch write operations
+   - MERGE query generation
+   - Retry logic and metrics
+
+5. **Monitoring & Logging** (`src/ingestion_pipeline/monitoring/`)
+   - Structured logging (structlog)
+   - Prometheus metrics collection
+   - Health checks for all components
+   - Rule-based alerting system
+
+### Pipeline Orchestrator
+
+The `src/ingestion_pipeline/pipeline.py` module integrates all components:
+
+```python
+from ingestion_pipeline.pipeline import GCPIngestionPipeline, PipelineConfig
+
+# Create and configure pipeline
+pipeline = GCPIngestionPipeline(
+    gcp_project_id="your-project",
+    gcp_service_account_path="key.json",
+    neo4j_uri="bolt://localhost:7687",
+    neo4j_username="neo4j",
+    neo4j_password="password",
+)
+
+# Run pipeline
+await pipeline.initialize()
+await pipeline.start()
+```
+
+### Running the Pipeline
+
+1. **Configure environment variables**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your GCP and Neo4j credentials
+   ```
+
+2. **Install Python dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the full pipeline**:
+   ```bash
+   python examples/full_pipeline_example.py
+   ```
+
+4. **Run tests**:
+   ```bash
+   pytest tests/test_pipeline_integration.py -v
+   ```
+
+### Pipeline Features
+
+- **Automatic initialization** of all components in dependency order
+- **Event-driven architecture** with Pub/Sub integration
+- **Comprehensive monitoring** with metrics, health checks, and alerts
+- **Graceful shutdown** with proper resource cleanup
+- **Configuration management** via environment variables or code
+- **Error handling** with retries and circuit breakers
+- **Production-ready** with logging, metrics, and health checks
+
+See `src/ingestion_pipeline/monitoring/README.md` for detailed monitoring documentation.
+
 ## Project Structure
 
 ```
@@ -117,12 +209,26 @@ agent-seomax/
 │   └── config.json      # Configuration
 ├── .cline/              # Cline rules
 │   └── rules/           # Development guidelines
-├── src/                 # Source code (to be created)
-├── tests/               # Tests (to be created)
-├── docs/                # Additional documentation (to be created)
+├── src/                 # Source code
+│   └── ingestion_pipeline/  # Data ingestion components
+│       ├── pipeline.py      # Main orchestrator
+│       ├── api_client/      # GCP API integration
+│       ├── event_system/    # Pub/Sub event handling
+│       ├── transformation/  # Data transformation
+│       ├── neo4j_ops/      # Neo4j operations
+│       └── monitoring/     # Logging and metrics
+├── tests/               # Test suite
+│   ├── test_pipeline_integration.py  # Pipeline tests
+│   └── test_monitoring_smoke.py      # Monitoring tests
+├── examples/            # Usage examples
+│   ├── full_pipeline_example.py      # Complete pipeline demo
+│   └── neo4j_batch_write_example.py  # Neo4j usage
+├── docs/                # Documentation
+│   └── neo4j-schema/    # Graph database schema
 ├── CLAUDE.md           # AI assistant instructions
 ├── README.md           # This file
-└── .env.example        # API keys template
+├── requirements.txt    # Python dependencies
+└── .env.example        # Environment template
 ```
 
 ## Key Concepts
