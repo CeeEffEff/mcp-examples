@@ -44,7 +44,7 @@ class ResourceQueries(BaseQuery):
             if resource:
                 print(f"Found: {resource['name']}, Status: {resource['status']}")
         """
-        self._validate_required_params({"resource_id": resource_id}, ["resource_id"])
+        self._validate_required_params(resource_id=resource_id)
         
         query = """
         MATCH (r {id: $resource_id})
@@ -91,8 +91,8 @@ class ResourceQueries(BaseQuery):
             for vm in vms:
                 print(f"VM: {vm['name']}, Zone: {vm.get('zone', 'N/A')}")
         """
-        self._validate_required_params({"resource_type": resource_type}, ["resource_type"])
-        self._validate_positive_int("limit", limit)
+        self._validate_required_params(resource_type=resource_type)
+        self._validate_positive_int(limit, "limit")
         
         # Sanitize label
         safe_label = self._sanitize_label(resource_type)
@@ -153,7 +153,7 @@ class ResourceQueries(BaseQuery):
             print(f"Total resources: {len(result['resources'])}")
             print(f"Resource counts: {result['counts']}")
         """
-        self._validate_required_params({"project_id": project_id}, ["project_id"])
+        self._validate_required_params(project_id=project_id)
         
         if resource_type:
             # Find specific type in project
@@ -227,7 +227,7 @@ class ResourceQueries(BaseQuery):
         if not properties:
             raise QueryValidationError("properties dict cannot be empty")
         
-        self._validate_positive_int("limit", limit)
+        self._validate_positive_int(limit, "limit")
         
         # Build MATCH clause
         if resource_type:
@@ -297,8 +297,8 @@ class ResourceQueries(BaseQuery):
                 search_fields=["name", "tags"]
             )
         """
-        self._validate_required_params({"search_term": search_term}, ["search_term"])
-        self._validate_positive_int("limit", limit)
+        self._validate_required_params(search_term=search_term)
+        self._validate_positive_int(limit, "limit")
         
         if not search_fields:
             search_fields = ["name", "description", "id"]
@@ -370,7 +370,7 @@ class ResourceQueries(BaseQuery):
                 print(f"Outgoing: {len(result['outgoing'])}")
                 print(f"Incoming: {len(result['incoming'])}")
         """
-        self._validate_required_params({"resource_id": resource_id}, ["resource_id"])
+        self._validate_required_params(resource_id=resource_id)
         
         # Find the resource first
         resource = self.find_by_id(resource_id)
@@ -564,8 +564,8 @@ class ResourceQueries(BaseQuery):
             for resource in recent:
                 print(f"Created: {resource['name']} at {resource['createdAt']}")
         """
-        self._validate_positive_int("hours", hours)
-        self._validate_positive_int("limit", limit)
+        self._validate_positive_int(hours, "hours")
+        self._validate_positive_int(limit, "limit")
         
         if resource_type:
             safe_label = self._sanitize_label(resource_type)
@@ -616,8 +616,8 @@ class ResourceQueries(BaseQuery):
         Example:
             updated = queries.find_recently_updated(hours=1, resource_type="StorageBucket")
         """
-        self._validate_positive_int("hours", hours)
-        self._validate_positive_int("limit", limit)
+        self._validate_positive_int(hours, "hours")
+        self._validate_positive_int(limit, "limit")
         
         if resource_type:
             safe_label = self._sanitize_label(resource_type)

@@ -56,7 +56,7 @@ class CacheEntry:
             return False  # Never expires
         
         age = (datetime.utcnow() - self.timestamp).total_seconds()
-        return age > self.ttl_seconds
+        return age >= self.ttl_seconds
     
     def increment_hits(self):
         """Increment the hit counter."""
@@ -201,8 +201,8 @@ class QueryCache:
             # Move to end (mark as recently used)
             self._cache.move_to_end(key)
             
-            # Evict oldest entry if cache is full
-            if len(self._cache) > self._max_size:
+            # Evict oldest entry if cache is at or over capacity
+            while len(self._cache) > self._max_size:
                 oldest_key = next(iter(self._cache))
                 del self._cache[oldest_key]
                 self._evictions += 1

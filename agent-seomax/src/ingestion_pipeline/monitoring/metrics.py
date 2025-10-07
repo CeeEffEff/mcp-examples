@@ -525,6 +525,48 @@ class PipelineMetrics:
                 "gauges": dict(self._gauges),
             }
     
+    def increment_counter(
+        self,
+        name: str,
+        labels: Optional[Dict[str, str]] = None,
+        count: int = 1,
+    ) -> None:
+        """
+        Increment a generic counter metric.
+        
+        Args:
+            name: Counter name
+            labels: Optional labels for the counter
+            count: Amount to increment
+        """
+        label_str = ""
+        if labels:
+            label_str = "_" + "_".join(f"{k}_{v}" for k, v in sorted(labels.items()))
+        
+        with self._lock:
+            self._counters[f"{name}{label_str}"] += count
+    
+    def record_histogram(
+        self,
+        name: str,
+        value: float,
+        labels: Optional[Dict[str, str]] = None,
+    ) -> None:
+        """
+        Record a value in a histogram metric.
+        
+        Args:
+            name: Histogram name
+            value: Value to record
+            labels: Optional labels for the histogram
+        """
+        label_str = ""
+        if labels:
+            label_str = "_" + "_".join(f"{k}_{v}" for k, v in sorted(labels.items()))
+        
+        with self._lock:
+            self._timings[f"{name}{label_str}"].append(value)
+    
     def reset(self) -> None:
         """Reset all metrics."""
         with self._lock:

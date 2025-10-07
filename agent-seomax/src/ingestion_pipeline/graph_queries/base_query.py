@@ -254,26 +254,24 @@ class BaseQuery(ABC):
             )
             return result.data[0]
     
-    def _validate_required_params(
-        self,
-        params: Dict[str, Any],
-        required: List[str],
-    ) -> None:
+    def _validate_required_params(self, **params: Any) -> None:
         """
-        Validate that required parameters are present.
+        Validate that required parameters are present and not None.
         
         Args:
-            params: Parameter dictionary
-            required: List of required parameter names
+            **params: Parameters to validate (parameter_name=value)
             
         Raises:
-            QueryValidationError: If required parameters are missing
+            QueryValidationError: If any parameters are None or empty strings
         """
-        missing = [key for key in required if key not in params or params[key] is None]
+        missing = []
+        for key, value in params.items():
+            if value is None or (isinstance(value, str) and value == ""):
+                missing.append(key)
         
         if missing:
             raise QueryValidationError(
-                f"Missing required parameters: {', '.join(missing)}"
+                f"Missing or invalid required parameters: {', '.join(missing)}"
             )
     
     def _validate_param_type(
@@ -299,13 +297,13 @@ class BaseQuery(ABC):
                 f"got {type(param_value).__name__}"
             )
     
-    def _validate_positive_int(self, param_name: str, value: int) -> None:
+    def _validate_positive_int(self, value: int, param_name: str) -> None:
         """
         Validate that a parameter is a positive integer.
         
         Args:
-            param_name: Parameter name
             value: Value to validate
+            param_name: Parameter name
             
         Raises:
             QueryValidationError: If not a positive integer

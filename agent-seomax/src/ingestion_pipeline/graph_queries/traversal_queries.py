@@ -75,10 +75,9 @@ class TraversalQueries(BaseQuery):
                     print(f"  -> {node['name']}")
         """
         self._validate_required_params(
-            {"source_id": source_id, "target_id": target_id},
-            ["source_id", "target_id"]
+            source_id=source_id, target_id=target_id
         )
-        self._validate_positive_int("max_depth", max_depth)
+        self._validate_positive_int(max_depth, "max_depth")
         
         # Build relationship type filter
         rel_filter = ""
@@ -148,8 +147,8 @@ class TraversalQueries(BaseQuery):
             print(f"Direct dependencies: {len(deps['direct_dependencies'])}")
             print(f"Total dependencies: {len(deps['all_dependencies'])}")
         """
-        self._validate_required_params({"resource_id": resource_id}, ["resource_id"])
-        self._validate_positive_int("max_depth", max_depth)
+        self._validate_required_params(resource_id=resource_id)
+        self._validate_positive_int(max_depth, "max_depth")
         
         # Get direct dependencies first
         direct_query = """
@@ -228,8 +227,8 @@ class TraversalQueries(BaseQuery):
             )
             print(f"Resources depending on this: {len(dependents['all_dependents'])}")
         """
-        self._validate_required_params({"resource_id": resource_id}, ["resource_id"])
-        self._validate_positive_int("max_depth", max_depth)
+        self._validate_required_params(resource_id=resource_id)
+        self._validate_positive_int(max_depth, "max_depth")
         
         # Get direct dependents
         direct_query = """
@@ -315,7 +314,7 @@ class TraversalQueries(BaseQuery):
             print(f"Total resources affected: {impact['total_affected']}")
             print(f"By type: {impact['affected_by_type']}")
         """
-        self._validate_required_params({"resource_id": resource_id}, ["resource_id"])
+        self._validate_required_params(resource_id=resource_id)
         
         # Get all affected resources
         dependents = self.find_dependents(
@@ -373,7 +372,7 @@ class TraversalQueries(BaseQuery):
                 for node in cycle['nodes']:
                     print(f"  -> {node['name']}")
         """
-        self._validate_positive_int("max_cycle_length", max_cycle_length)
+        self._validate_positive_int(max_cycle_length, "max_cycle_length")
         
         # Build project filter
         where_clause = ""
@@ -441,8 +440,8 @@ class TraversalQueries(BaseQuery):
             for resource in connected:
                 print(f"{resource['resource']['name']} - distance: {resource['distance']}")
         """
-        self._validate_required_params({"resource_id": resource_id}, ["resource_id"])
-        self._validate_positive_int("max_hops", max_hops)
+        self._validate_required_params(resource_id=resource_id)
+        self._validate_positive_int(max_hops, "max_hops")
         
         # Build relationship filter
         rel_filter = ""
@@ -535,7 +534,7 @@ class TraversalQueries(BaseQuery):
             for cluster in clusters:
                 print(f"Cluster size: {cluster['size']}")
         """
-        self._validate_positive_int("min_cluster_size", min_cluster_size)
+        self._validate_positive_int(min_cluster_size, "min_cluster_size")
         
         where_clause = ""
         parameters = {"min_size": min_cluster_size}
@@ -600,7 +599,7 @@ class TraversalQueries(BaseQuery):
             depth_info = queries.calculate_dependency_depth(resource_id="...")
             print(f"Max dependency depth: {depth_info['max_depth']}")
         """
-        self._validate_required_params({"resource_id": resource_id}, ["resource_id"])
+        self._validate_required_params(resource_id=resource_id)
         
         query = """
         MATCH path = (r {id: $resource_id})-[:DEPENDS_ON*]->(dep)
