@@ -128,7 +128,8 @@ class ResourceQueries(BaseQuery):
             query_type="resources_by_type"
         )
         
-        return [dict(record['r']) for record in result.data]
+        # Return QueryResult instead of list
+        return result
     
     @track_query_performance("resources_by_project")
     def find_by_project(

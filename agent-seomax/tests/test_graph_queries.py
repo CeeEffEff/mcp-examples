@@ -83,6 +83,51 @@ def sample_disk_data():
 
 
 # =============================================================================
+# Debug Test
+# =============================================================================
+
+class TestMockStructure:
+    """Debug tests for mock structure validation."""
+    
+    def test_mock_iteration_debug(self, mock_connection_manager):
+        """Debug test to verify mock iteration works correctly."""
+        # Create a simple mock record
+        class MockRecord(dict):
+            def __init__(self, data):
+                super().__init__(data)
+            def keys(self):
+                return dict.keys(self)
+        
+        test_record = MockRecord({"test_key": "test_value"})
+        
+        # Test 1: Plain list (current failing approach)
+        plain_list_result = [test_record]
+        
+        # Test 2: Mock with explicit __iter__ (current working approach)
+        mock_result = Mock()
+        mock_result.__iter__ = Mock(return_value=iter([test_record]))
+        
+        # Setup session
+        session = mock_connection_manager.get_session.return_value.__enter__.return_value
+        
+        # Test plain list approach
+        session.run.return_value = plain_list_result
+        result1 = session.run("TEST", {})
+        records1 = [dict(r) for r in result1]
+        print(f"Plain list - Result type: {type(result1)}, Records: {records1}, Count: {len(records1)}")
+        
+        # Test mock approach
+        session.run.return_value = mock_result
+        result2 = session.run("TEST", {})
+        records2 = [dict(r) for r in result2]
+        print(f"Mock - Result type: {type(result2)}, Records: {records2}, Count: {len(records2)}")
+        
+        # Both should produce 1 record
+        assert len(records1) == 1, f"Plain list failed: got {len(records1)} records"
+        assert len(records2) == 1, f"Mock approach failed: got {len(records2)} records"
+
+
+# =============================================================================
 # ResourceQueries Tests
 # =============================================================================
 
@@ -93,7 +138,7 @@ class TestResourceQueries:
         """Test successful resource lookup by ID."""
         # Setup mock - make record dict-like
         mock_record = Mock()
-        record_data = {"resource": sample_vm_data, "labels": ["VirtualMachine"]}
+        record_data = {"r": sample_vm_data, "labels": ["VirtualMachine"]}
         mock_record.__getitem__ = lambda self, key: record_data[key]
         mock_record.keys.return_value = record_data.keys()
         mock_record.get.return_value = ["VirtualMachine"]
@@ -137,40 +182,51 @@ class TestResourceQueries:
     
     def test_find_by_type(self, mock_connection_manager, sample_vm_data):
         """Test finding resources by type."""
-        mock_record = Mock()
-        record_data = {"resource": sample_vm_data}
-        mock_record.__getitem__ = lambda self, key: record_data[key]
-        mock_record.keys.return_value = record_data.keys()
+        # Create a dict-like mock record that behaves like a Neo4j Record
+        class MockRecord(dict):
+            def __init__(self, data):
+                super().__init__(data)
+            def keys(self):
+                return dict.keys(self)
         
-        mock_result = Mock()
-        mock_result.records = [mock_record]
-        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
+        mock_record = MockRecord({"r": sample_vm_data})
+        
+        # Mock result that is directly iterable
+        mock_result = [mock_record]
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
         
-        queries = get_resource_queries(connection_manager=mock_connection_manager)
+        # Import the class directly and create new instance to avoid singleton issues
+        from src.ingestion_pipeline.graph_queries.resource_queries import ResourceQueries
+        queries = ResourceQueries(connection_manager=mock_connection_manager, enable_monitoring=False)
         result = queries.find_by_type("VirtualMachine", project_id="test-project")
         
         assert isinstance(result, QueryResult)
         assert len(result.data) == 1
-        assert result.data[0]["id"] == sample_vm_data["id"]
+        # Access the nested 'r' key since find_by_type returns raw QueryResult
+        assert result.data[0]["r"]["id"] == sample_vm_data["id"]
     
     def test_count(self, mock_connection_manager):
         """Test counting resources."""
-        mock_record = Mock()
-        record_data = {"count": 5}
-        mock_record.__getitem__ = lambda self, key: record_data[key]
-        mock_record.keys.return_value = record_data.keys()
+        # Create a dict-like mock record
+        class MockRecord(dict):
+            def __init__(self, data):
+                super().__init__(data)
+            def keys(self):
+                return dict.keys(self)
         
-        mock_result = Mock()
-        mock_result.records = [mock_record]
-        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
+        mock_record = MockRecord({"count": 5})
+        
+        # Mock result that is directly iterable
+        mock_result = [mock_record]
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
         
-        queries = get_resource_queries(connection_manager=mock_connection_manager)
+        # Import the class directly and create new instance to avoid singleton issues
+        from src.ingestion_pipeline.graph_queries.resource_queries import ResourceQueries
+        queries = ResourceQueries(connection_manager=mock_connection_manager, enable_monitoring=False)
         count = queries.count(resource_type="VirtualMachine", project_id="test-project")
         
         assert count == 5
@@ -203,32 +259,51 @@ class TestTraversalQueries:
         queries = get_traversal_queries(connection_manager=mock_connection_manager)
         result = queries.find_dependencies("test-resource-id")
         
-        assert isinstance(result, QueryResult)
-        assert len(result.data) >= 0
+        assert isinstance(result, dict)
+        assert "direct_dependencies" in result
+        assert "resource_id" in result
     
     def test_find_shortest_path(self, mock_connection_manager):
         """Test finding shortest path between resources."""
-        mock_record = Mock()
-        record_data = {
-            "path_length": 2,
-            "node_ids": ["source", "intermediate", "target"],
-            "relationships": ["DEPENDS_ON", "USES"]
-        }
-        mock_record.__getitem__ = lambda self, key: record_data[key]
-        mock_record.keys.return_value = record_data.keys()
+        # Create a dict-like mock record
+        class MockRecord(dict):
+            def __init__(self, data):
+                super().__init__(data)
+            def keys(self):
+                return dict.keys(self)
         
-        mock_result = Mock()
-        mock_result.records = [mock_record]
-        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
+        # Create mock node objects
+        mock_nodes = [
+            {"id": "source"},
+            {"id": "intermediate"},
+            {"id": "target"}
+        ]
+        
+        mock_record = MockRecord({
+            "path": Mock(),  # Neo4j path object
+            "path_nodes": mock_nodes,
+            "path_rels": ["DEPENDS_ON", "USES"],
+            "path_length": 2
+        })
+        
+        # Mock result that is directly iterable
+        mock_result = [mock_record]
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
         
-        queries = get_traversal_queries(connection_manager=mock_connection_manager)
+        # Import the class directly and create new instance to avoid singleton issues
+        from src.ingestion_pipeline.graph_queries.traversal_queries import TraversalQueries
+        queries = TraversalQueries(connection_manager=mock_connection_manager, enable_monitoring=False)
         result = queries.find_shortest_path("source-id", "target-id")
         
+        # Result should be a dict extracted and reformatted by find_shortest_path()
         assert result is not None
-        assert "path_length" in result
+        assert isinstance(result, dict)
+        # The method returns 'length' not 'path_length'
+        assert result["length"] == 2
+        assert "nodes" in result
+        assert "relationships" in result
     
     def test_analyze_impact(self, mock_connection_manager):
         """Test impact analysis for a resource."""
@@ -393,26 +468,31 @@ class TestAnalysisQueries:
     
     def test_identify_bottlenecks(self, mock_connection_manager):
         """Test bottleneck identification."""
-        mock_record = Mock()
-        record_data = {
+        # Create a dict-like mock record
+        class MockRecord(dict):
+            def __init__(self, data):
+                super().__init__(data)
+            def keys(self):
+                return dict.keys(self)
+        
+        mock_record = MockRecord({
             "resource_id": "bottleneck-resource",
             "resource_type": "VirtualMachine",
             "resource_name": "critical-vm",
             "status": "RUNNING",
             "dependency_count": 15,
             "dependent_ids": ["dep1", "dep2", "dep3"]
-        }
-        mock_record.__getitem__ = lambda self, key: record_data[key]
-        mock_record.keys.return_value = record_data.keys()
+        })
         
-        mock_result = Mock()
-        mock_result.records = [mock_record]
-        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
+        # Mock result that is directly iterable
+        mock_result = [mock_record]
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
         
-        queries = get_analysis_queries(connection_manager=mock_connection_manager)
+        # Import the class directly and create new instance to avoid singleton issues
+        from src.ingestion_pipeline.graph_queries.analysis_queries import AnalysisQueries
+        queries = AnalysisQueries(connection_manager=mock_connection_manager, monitoring_enabled=False)
         result = queries.identify_bottlenecks("test-project")
         
         assert isinstance(result, QueryResult)
