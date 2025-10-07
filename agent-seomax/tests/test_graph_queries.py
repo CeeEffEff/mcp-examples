@@ -91,13 +91,16 @@ class TestResourceQueries:
     
     def test_find_by_id_success(self, mock_connection_manager, sample_vm_data):
         """Test successful resource lookup by ID."""
-        # Setup mock
+        # Setup mock - make record dict-like
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: sample_vm_data if key == "resource" else ["VirtualMachine"]
+        record_data = {"resource": sample_vm_data, "labels": ["VirtualMachine"]}
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         mock_record.get.return_value = ["VirtualMachine"]
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -115,6 +118,7 @@ class TestResourceQueries:
         """Test resource not found."""
         mock_result = Mock()
         mock_result.records = []
+        mock_result.__iter__ = Mock(return_value=iter([]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -134,10 +138,13 @@ class TestResourceQueries:
     def test_find_by_type(self, mock_connection_manager, sample_vm_data):
         """Test finding resources by type."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: sample_vm_data
+        record_data = {"resource": sample_vm_data}
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -152,10 +159,13 @@ class TestResourceQueries:
     def test_count(self, mock_connection_manager):
         """Test counting resources."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: 5
+        record_data = {"count": 5}
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -176,15 +186,16 @@ class TestTraversalQueries:
     def test_find_dependencies(self, mock_connection_manager):
         """Test finding resource dependencies."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
-            "resource_id": "dep-resource-1",
-            "resource_type": "PersistentDisk",
-            "distance": 1,
-            "relationship_type": "DEPENDS_ON"
-        }[key]
+        record_data = {
+            "dep": {"id": "dep-resource-1"},
+            "labels": ["PersistentDisk"]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -198,14 +209,17 @@ class TestTraversalQueries:
     def test_find_shortest_path(self, mock_connection_manager):
         """Test finding shortest path between resources."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
+        record_data = {
             "path_length": 2,
             "node_ids": ["source", "intermediate", "target"],
             "relationships": ["DEPENDS_ON", "USES"]
-        }[key]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -219,14 +233,17 @@ class TestTraversalQueries:
     def test_analyze_impact(self, mock_connection_manager):
         """Test impact analysis for a resource."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
+        record_data = {
             "resource_id": "affected-1",
             "resource_type": "VirtualMachine",
             "distance": 1
-        }[key]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -235,7 +252,8 @@ class TestTraversalQueries:
         result = queries.analyze_impact("test-resource-id")
         
         assert isinstance(result, dict)
-        assert "affected_resources" in result
+        assert "directly_affected" in result
+        assert "indirectly_affected" in result
 
 
 # =============================================================================
@@ -248,16 +266,19 @@ class TestRelationshipQueries:
     def test_find_relationships_between(self, mock_connection_manager):
         """Test finding relationships between two resources."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
+        record_data = {
             "source_id": "source-id",
             "relationship_type": "DEPENDS_ON",
             "target_id": "target-id",
             "relationship_id": 123,
             "properties": {"weight": 1}
-        }[key]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -272,10 +293,13 @@ class TestRelationshipQueries:
     def test_count_relationships(self, mock_connection_manager):
         """Test counting relationships for a resource."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: 3
+        record_data = {"count": 3}
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -292,27 +316,35 @@ class TestRelationshipQueries:
         """Test relationship pattern analysis."""
         # Mock type distribution result
         type_record = Mock()
-        type_record.__getitem__ = lambda self, key: {
+        type_data = {
             "relationship_type": "DEPENDS_ON",
             "count": 10
-        }[key]
+        }
+        type_record.__getitem__ = lambda self, key: type_data[key]
+        type_record.keys.return_value = type_data.keys()
         
         # Mock pair patterns result
         pair_record = Mock()
-        pair_record.__getitem__ = lambda self, key: {
+        pair_data = {
             "source_type": "VirtualMachine",
             "relationship_type": "USES",
             "target_type": "PersistentDisk",
             "count": 5
-        }[key]
+        }
+        pair_record.__getitem__ = lambda self, key: pair_data[key]
+        pair_record.keys.return_value = pair_data.keys()
         
-        mock_result = Mock()
-        mock_result.records = [type_record]
+        # Create iterable mock results
+        type_result = Mock(records=[type_record])
+        type_result.__iter__ = Mock(return_value=iter([type_record]))
+        
+        pair_result = Mock(records=[pair_record])
+        pair_result.__iter__ = Mock(return_value=iter([pair_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.side_effect = [
-            Mock(records=[type_record]),  # Type distribution
-            Mock(records=[pair_record])    # Pair patterns
+            type_result,  # Type distribution
+            pair_result   # Pair patterns
         ]
         
         queries = get_relationship_queries(connection_manager=mock_connection_manager)
@@ -333,17 +365,20 @@ class TestAnalysisQueries:
     def test_analyze_costs(self, mock_connection_manager):
         """Test cost analysis."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
+        record_data = {
             "resource_type": "VirtualMachine",
             "resource_count": 3,
             "total_cost": 150.0,
             "avg_cost": 50.0,
             "min_cost": 30.0,
             "max_cost": 70.0
-        }[key]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -359,17 +394,20 @@ class TestAnalysisQueries:
     def test_identify_bottlenecks(self, mock_connection_manager):
         """Test bottleneck identification."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
+        record_data = {
             "resource_id": "bottleneck-resource",
             "resource_type": "VirtualMachine",
             "resource_name": "critical-vm",
             "status": "RUNNING",
             "dependency_count": 15,
             "dependent_ids": ["dep1", "dep2", "dep3"]
-        }[key]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -385,15 +423,18 @@ class TestAnalysisQueries:
     def test_find_security_issues(self, mock_connection_manager):
         """Test security issue detection."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
+        record_data = {
             "resource_id": "vm-1",
             "resource_type": "VirtualMachine",
             "resource_name": "public-vm",
             "public_ip": "1.2.3.4"
-        }[key]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
@@ -407,17 +448,20 @@ class TestAnalysisQueries:
     def test_suggest_optimizations(self, mock_connection_manager):
         """Test optimization suggestions."""
         mock_record = Mock()
-        mock_record.__getitem__ = lambda self, key: {
+        record_data = {
             "vm_id": "underutilized-vm",
             "vm_name": "test-vm",
             "machine_type": "n1-standard-8",
             "cpu_util": 5.0,
             "mem_util": 10.0,
             "cost": 200.0
-        }[key]
+        }
+        mock_record.__getitem__ = lambda self, key: record_data[key]
+        mock_record.keys.return_value = record_data.keys()
         
         mock_result = Mock()
         mock_result.records = [mock_record]
+        mock_result.__iter__ = Mock(return_value=iter([mock_record]))
         
         session = mock_connection_manager.get_session.return_value.__enter__.return_value
         session.run.return_value = mock_result
