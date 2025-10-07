@@ -11,7 +11,97 @@ An intelligent agent system leveraging a digital twin of a GCP environment (Neo4
 - GCP account with API access
 - API Keys: Anthropic (Claude) and Perplexity
 
-### Setup
+## Development Setup
+
+### Automated Setup (Recommended)
+
+The project includes setup scripts that create a project-specific virtual environment and install all dependencies automatically.
+
+**Unix/Linux/macOS:**
+```bash
+./scripts/setup.sh
+```
+
+**Windows PowerShell:**
+```powershell
+.\scripts\setup.ps1
+```
+
+The setup script will:
+- ✅ Check Python version (3.9+ required)
+- ✅ Create project-specific virtual environment (`venv/`)
+- ✅ Upgrade pip, wheel, and setuptools
+- ✅ Install all dependencies from requirements.txt
+- ✅ Create `.env` from template (if not exists)
+- ✅ Verify package imports
+
+### Manual Setup
+
+If you prefer to set up manually or the automated script fails:
+
+1. **Create virtual environment**:
+   ```bash
+   python3 -m venv venv
+   ```
+
+2. **Activate virtual environment**:
+   ```bash
+   # Unix/Linux/macOS
+   source venv/bin/activate
+   
+   # Windows
+   venv\Scripts\activate
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install --upgrade pip wheel setuptools
+   pip install -r requirements.txt
+   ```
+
+4. **Configure environment**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your credentials
+   ```
+
+### Verify Installation
+
+After setup, verify everything is working:
+
+```bash
+# Activate virtual environment (if not already active)
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+# Run import test
+python -c "from ingestion_pipeline import graph_queries; print('✓ Imports successful')"
+
+# Run all tests
+pytest tests/ -v
+
+# Run specific test suite with coverage
+pytest tests/test_graph_queries.py -v --cov=src/ingestion_pipeline/graph_queries
+```
+
+### Troubleshooting
+
+**Import Errors**: If you encounter import errors, ensure:
+- Virtual environment is activated (you should see `(venv)` in your terminal prompt)
+- All dependencies are installed: `pip list | grep google-cloud`
+- You're in the project root directory
+
+**GCP API Errors**: The tests use mocking and don't require actual GCP credentials. However, for running the pipeline:
+- Set `GCP_SERVICE_ACCOUNT_PATH` in `.env`
+- Ensure your service account has necessary permissions
+
+**Test Failures**: If tests fail:
+- Check Python version: `python --version` (must be 3.9+)
+- Reinstall dependencies: `pip install -r requirements.txt --force-reinstall`
+- Clear pytest cache: `pytest --cache-clear`
+
+### Taskmaster Setup
+
+Once the Python environment is set up, configure Taskmaster for project management:
 
 1. **Install Taskmaster** (if not already installed):
    ```bash
@@ -20,11 +110,12 @@ An intelligent agent system leveraging a digital twin of a GCP environment (Neo4
 
 2. **Configure API Keys**:
    ```bash
-   cp .env.example .env
-   # Edit .env and add your API keys
+   # Already done if you ran setup script
+   # Otherwise: cp .env.example .env
+   # Edit .env and add ANTHROPIC_API_KEY and PERPLEXITY_API_KEY
    ```
 
-3. **Generate Project Tasks**:
+3. **Generate Project Tasks** (optional - tasks may already exist):
    ```bash
    task-master parse-prd .taskmaster/docs/prd.txt --num-tasks=12
    task-master analyze-complexity --research

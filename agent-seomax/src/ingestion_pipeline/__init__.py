@@ -58,7 +58,10 @@ from .monitoring import (
 )
 
 # Pipeline
-from .pipeline import IngestionPipeline
+from .pipeline import GCPIngestionPipeline
+
+# Alias for backwards compatibility
+IngestionPipeline = GCPIngestionPipeline
 
 
 __all__ = [
@@ -90,7 +93,8 @@ __all__ = [
     "get_alert_manager",
     
     # Pipeline
-    "IngestionPipeline",
+    "GCPIngestionPipeline",
+    "IngestionPipeline",  # Alias
 ]
 
 __version__ = "0.2.0"

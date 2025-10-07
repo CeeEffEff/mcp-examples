@@ -5,7 +5,7 @@ These schemas define the data structure for Neo4j nodes, ensuring
 type safety and validation before database insertion.
 """
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Literal
 from datetime import datetime
 from enum import Enum
 
@@ -265,7 +265,7 @@ class BaseRelationshipSchema(BaseModel):
 class AttachedToRelationship(BaseRelationshipSchema):
     """Relationship for instance attached to network."""
     
-    relationshipType: str = Field(default="ATTACHED_TO", const=True)
+    relationshipType: Literal["ATTACHED_TO"] = "ATTACHED_TO"
     
     # Network Interface Details
     interfaceIndex: int = Field(..., description="Interface number")
@@ -284,7 +284,7 @@ class AttachedToRelationship(BaseRelationshipSchema):
 class UsesDiskRelationship(BaseRelationshipSchema):
     """Relationship for instance using disk."""
     
-    relationshipType: str = Field(default="USES_DISK", const=True)
+    relationshipType: Literal["USES_DISK"] = "USES_DISK"
     
     # Disk Attachment Configuration
     deviceName: str = Field(..., description="Device name within instance")
@@ -297,7 +297,7 @@ class UsesDiskRelationship(BaseRelationshipSchema):
 class PartOfRelationship(BaseRelationshipSchema):
     """Relationship for child being part of parent."""
     
-    relationshipType: str = Field(default="PART_OF", const=True)
+    relationshipType: Literal["PART_OF"] = "PART_OF"
 
 
 class TransformationResult(BaseModel):
