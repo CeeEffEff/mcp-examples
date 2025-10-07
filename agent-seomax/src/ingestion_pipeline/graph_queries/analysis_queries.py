@@ -139,7 +139,7 @@ class AnalysisQueries(BaseQuery):
         breakdown = []
         total_cost = 0.0
         
-        for record in result.records:
+        for record in result.data:
             if group_by == "resource_type":
                 breakdown.append({
                     "resource_type": record["resource_type"],
@@ -241,7 +241,7 @@ class AnalysisQueries(BaseQuery):
         )
         
         bottlenecks = []
-        for record in result.records:
+        for record in result.data:
             bottlenecks.append({
                 "resource_id": record["resource_id"],
                 "resource_type": record["resource_type"],
@@ -263,10 +263,8 @@ class AnalysisQueries(BaseQuery):
         
         return QueryResult(
             data=bottlenecks,
-            query_type="identify_bottlenecks",
-            record_count=len(bottlenecks),
             execution_time=result.execution_time,
-            timestamp=result.timestamp
+            record_count=len(bottlenecks)
         )
     
     @track_query_performance("analyze_network_topology")
@@ -309,11 +307,11 @@ class AnalysisQueries(BaseQuery):
             query_type="analyze_network_topology_vpc"
         )
         
-        if not vpc_result.records:
+        if not vpc_result.data:
             logger.warning(f"VPC {vpc_id} not found")
             return {"error": f"VPC {vpc_id} not found"}
         
-        vpc_info = dict(vpc_result.records[0])
+        vpc_info = dict(vpc_result.data[0])
         topology = {
             "vpc": vpc_info,
             "timestamp": datetime.utcnow().isoformat()
@@ -336,7 +334,7 @@ class AnalysisQueries(BaseQuery):
         
         topology["connected_resources"] = [
             {"resource_type": r["resource_type"], "count": r["count"]}
-            for r in connected_result.records
+            for r in connected_result.data
         ]
         
         # Analyze subnets if requested
@@ -366,7 +364,7 @@ class AnalysisQueries(BaseQuery):
                     "region": r["region"],
                     "instance_count": r["instance_count"]
                 }
-                for r in subnet_result.records
+                for r in subnet_result.data
             ]
         
         # Analyze routes if requested
@@ -396,7 +394,7 @@ class AnalysisQueries(BaseQuery):
                     "priority": r["priority"],
                     "next_hop": r["next_hop"]
                 }
-                for r in route_result.records
+                for r in route_result.data
             ]
         
         logger.info(f"Analyzed network topology for VPC {vpc_id}")
@@ -453,7 +451,7 @@ class AnalysisQueries(BaseQuery):
                 query_type="find_security_issues_public_ips"
             )
             
-            for record in result.records:
+            for record in result.data:
                 issues.append({
                     "issue_type": "public_ip_exposure",
                     "severity": "medium",
@@ -483,7 +481,7 @@ class AnalysisQueries(BaseQuery):
                 query_type="find_security_issues_firewall"
             )
             
-            for record in result.records:
+            for record in result.data:
                 issues.append({
                     "issue_type": "open_firewall_rule",
                     "severity": "high",
@@ -511,7 +509,7 @@ class AnalysisQueries(BaseQuery):
                 query_type="find_security_issues_encryption"
             )
             
-            for record in result.records:
+            for record in result.data:
                 issues.append({
                     "issue_type": "unencrypted_storage",
                     "severity": "high",
@@ -539,7 +537,7 @@ class AnalysisQueries(BaseQuery):
                 query_type="find_security_issues_service_accounts"
             )
             
-            for record in result.records:
+            for record in result.data:
                 issues.append({
                     "issue_type": "default_service_account",
                     "severity": "medium",
@@ -558,10 +556,8 @@ class AnalysisQueries(BaseQuery):
         
         return QueryResult(
             data=issues,
-            query_type="find_security_issues",
-            record_count=len(issues),
             execution_time=0,  # Combined from multiple queries
-            timestamp=datetime.utcnow()
+            record_count=len(issues)
         )
     
     @track_query_performance("suggest_optimizations")
@@ -617,7 +613,7 @@ class AnalysisQueries(BaseQuery):
                 query_type="suggest_optimizations_underutilized"
             )
             
-            for record in result.records:
+            for record in result.data:
                 suggestions.append({
                     "optimization_type": "underutilized_vm",
                     "potential_savings": "medium",
@@ -651,7 +647,7 @@ class AnalysisQueries(BaseQuery):
                 query_type="suggest_optimizations_orphaned"
             )
             
-            for record in result.records:
+            for record in result.data:
                 suggestions.append({
                     "optimization_type": "orphaned_disk",
                     "potential_savings": "high",
@@ -688,7 +684,7 @@ class AnalysisQueries(BaseQuery):
                 query_type="suggest_optimizations_redundant"
             )
             
-            for record in result.records:
+            for record in result.data:
                 suggestions.append({
                     "optimization_type": "redundant_firewall_rules",
                     "potential_savings": "low",
@@ -707,10 +703,8 @@ class AnalysisQueries(BaseQuery):
         
         return QueryResult(
             data=suggestions,
-            query_type="suggest_optimizations",
-            record_count=len(suggestions),
             execution_time=0,  # Combined from multiple queries
-            timestamp=datetime.utcnow()
+            record_count=len(suggestions)
         )
     
     def _calculate_bottleneck_severity(self, dependency_count: int) -> str:

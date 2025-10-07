@@ -111,7 +111,7 @@ class RelationshipQueries(BaseQuery):
         )
         
         relationships = []
-        for record in result.records:
+        for record in result.data:
             rel_data = {
                 "source_id": record["source_id"],
                 "relationship_type": record["relationship_type"],
@@ -130,10 +130,8 @@ class RelationshipQueries(BaseQuery):
         
         return QueryResult(
             data=relationships,
-            query_type="find_relationships_between",
-            record_count=len(relationships),
             execution_time=result.execution_time,
-            timestamp=result.timestamp
+            record_count=len(relationships)
         )
     
     @track_query_performance("find_by_type")
@@ -222,7 +220,7 @@ class RelationshipQueries(BaseQuery):
         )
         
         relationships = []
-        for record in result.records:
+        for record in result.data:
             rel_data = {
                 "source_id": record["source_id"],
                 "relationship_type": record["relationship_type"],
@@ -253,10 +251,8 @@ class RelationshipQueries(BaseQuery):
         
         return QueryResult(
             data=relationships,
-            query_type="find_by_type",
-            record_count=len(relationships),
             execution_time=result.execution_time,
-            timestamp=result.timestamp
+            record_count=len(relationships)
         )
     
     @track_query_performance("count_relationships")
@@ -304,7 +300,7 @@ class RelationshipQueries(BaseQuery):
                 parameters={"resource_id": resource_id},
                 query_type="count_relationships_incoming"
             )
-            counts["incoming"] = result.records[0]["count"] if result.records else 0
+            counts["incoming"] = result.data[0]["count"] if result.data else 0
         
         # Count outgoing relationships
         if direction in ["outgoing", "both"]:
@@ -317,7 +313,7 @@ class RelationshipQueries(BaseQuery):
                 parameters={"resource_id": resource_id},
                 query_type="count_relationships_outgoing"
             )
-            counts["outgoing"] = result.records[0]["count"] if result.records else 0
+            counts["outgoing"] = result.data[0]["count"] if result.data else 0
         
         counts["total"] = counts["incoming"] + counts["outgoing"]
         
@@ -384,7 +380,7 @@ class RelationshipQueries(BaseQuery):
         )
         
         orphaned = []
-        for record in result.records:
+        for record in result.data:
             orphaned.append({
                 "source_id": record["source_id"],
                 "relationship_type": record["relationship_type"],
@@ -398,10 +394,8 @@ class RelationshipQueries(BaseQuery):
         
         return QueryResult(
             data=orphaned,
-            query_type="find_unused_relationships",
-            record_count=len(orphaned),
             execution_time=result.execution_time,
-            timestamp=result.timestamp
+            record_count=len(orphaned)
         )
     
     @track_query_performance("analyze_relationship_patterns")
@@ -474,7 +468,7 @@ class RelationshipQueries(BaseQuery):
         
         type_distribution = [
             {"relationship_type": r["relationship_type"], "count": r["count"]}
-            for r in result1.records
+            for r in result1.data
         ]
         
         # Execute pair patterns query
@@ -491,7 +485,7 @@ class RelationshipQueries(BaseQuery):
                 "target_type": r["target_type"],
                 "count": r["count"]
             }
-            for r in result2.records
+            for r in result2.data
         ]
         
         analysis = {
@@ -509,10 +503,8 @@ class RelationshipQueries(BaseQuery):
         
         return QueryResult(
             data=analysis,
-            query_type="analyze_relationship_patterns",
-            record_count=len(type_distribution) + len(pair_patterns),
             execution_time=result1.execution_time + result2.execution_time,
-            timestamp=datetime.utcnow()
+            record_count=len(type_distribution) + len(pair_patterns)
         )
     
     @track_query_performance("get_relationship_statistics")
@@ -552,7 +544,7 @@ class RelationshipQueries(BaseQuery):
             query_type="get_relationship_statistics"
         )
         
-        if not result.records:
+        if not result.data:
             return {
                 "total_relationships": 0,
                 "unique_relationship_types": 0,
@@ -560,7 +552,7 @@ class RelationshipQueries(BaseQuery):
                 "resources_with_incoming": 0
             }
         
-        record = result.records[0]
+        record = result.data[0]
         stats = {
             "total_relationships": record["total_relationships"],
             "unique_relationship_types": record["unique_relationship_types"],
