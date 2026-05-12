@@ -1,0 +1,14 @@
+name: Explore the repository using your available tools.
+version: 0.0.1
+schema: v1
+prompts:
+  - name: Explore the repository using your available tools.
+    description: General methodology for analyzing a codebase
+    prompt: |
+      Explore the repository using your available tools.
+      You should perform this exploration iteratively.
+      At each step you should use insight and your tools to store progress, entities, relationships and observations in your Neo4j knowledge memory.
+
+      The exploration is how you discover things, and the neo4j knowledge memory is how your save those discoveries and also track your progress of exploration.
+
+      You should proceed iteratively taking steps that are as small as possible.

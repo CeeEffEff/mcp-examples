@@ -1,0 +1,37 @@
+# Task ID: 1
+# Title: Dataset Preparation
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Create 10+ prompt-ground truth pairs and validate dataset
+# Details:
+
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. Create 10+ prompt-ground truth pairs (JSON format) [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 2. Validate dataset alignment with system prompt requirements [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 3. Store dataset in Google Cloud Storage (gs://bucket/prompt_data.jsonl) [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 4. Add data quality checks for prompt diversity and ground truth accuracy [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+

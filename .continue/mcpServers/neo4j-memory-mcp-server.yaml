@@ -1,0 +1,30 @@
+name: neo4j Knowledge Graph Memory MCP
+version: 1.0.0
+schema: v1
+
+mcpServers:
+  - name: neo4j Knowledge Graph Memory
+    command: uvx
+    args:
+      # - "DISABLED" 
+      - "mcp-neo4j-memory@0.3.0"
+      - "--db-url"
+      # - "neo4j+s://http://localhost:7474/"
+      - "bolt://localhost:7687/"
+     
+      # - "--transport"
+      # - "http"
+      # - "--server-host"
+      # - "127.0.0.1"
+      # - "--server-port"
+      # - "8081"
+      # - "--server-path"
+      # - "/api/mcp/"
+
+
+      - "--username"
+      - "neo4j"
+      - "--password"
+      - "2VZi3xnzpl&2ZThU"
+    # env:
+      # MEMORY_FILE_PATH: "/Users/conor.fehilly/Documents/repos/mcp-examples/.continue/data_stores/server-memory/memory.jsonl"

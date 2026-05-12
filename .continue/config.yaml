@@ -1,0 +1,680 @@
+name: MPC EXAMPLES continue CLI 
+version: 1.0.0
+schema: v1
+models:
+  - name: Autodetect
+    provider: ollama
+    model: AUTODETECT
+    apiBase: http://0.0.0.0:11434/v1
+  - name: Nomic Embed Text
+    provider: ollama
+    model: nomic-embed-text
+    roles:
+      - embed
+    defaultCompletionOptions:
+      contextLength: 2048
+    apiBase: http://0.0.0.0:11434/v1
+  - name: Qwen3-Embedding-0.6B-GGUF
+    provider: ollama
+    model: hf.co/Qwen/Qwen3-Embedding-0.6B-GGUF:Q8_0
+    roles:
+      - embed
+    apiBase: http://0.0.0.0:11434/v1
+  - name: deepseek-r1 7b
+    provider: ollama
+    model: deepseek-r1:7b
+    apiBase: http://0.0.0.0:11434/v1
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 100000
+      maxTokens: 8192
+      stream: true
+  - name: qwen2.5-coder 7b
+    provider: ollama
+    model: qwen2.5-coder:7b
+    apiBase: http://0.0.0.0:11434/v1
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 32768
+      maxTokens: 8192
+      stream: true
+  - name: qwen3-coder 30b
+    provider: ollama
+    model: qwen3-coder:30b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 10960
+      maxTokens: 8192
+      stream: true
+  - name: qwen3 8b thinker
+    provider: ollama
+    model: qwen3:8b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - summarize
+    defaultCompletionOptions:
+      contextLength: 40960
+      maxTokens: 18192
+      stream: true
+  - name: qwen3 8b
+    provider: ollama
+    model: qwen3:8b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+      - summarize
+      - autocomplete
+    defaultCompletionOptions:
+      contextLength: 40960
+      maxTokens: 18192
+      stream: true
+    requestOptions:
+      extraBodyProperties:
+        think: false
+  - name: qwen3 8b max
+    provider: ollama
+    model: qwen3-max-context:8b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+      - summarize
+      - autocomplete
+    defaultCompletionOptions:
+      stream: true
+  - name: qwen3 8b max no think
+    provider: ollama
+    model: qwen3-max-context:8b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+      - summarize
+      - autocomplete
+    defaultCompletionOptions:
+      stream: true
+    requestOptions:
+      extraBodyProperties:
+        think: false
+  - name: qwen3 8b Product Manager
+    provider: ollama
+    model: qwen3:8b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 40960
+      maxTokens: 18192
+      stream: true
+    chatOptions:
+      baseAgentSystemMessage: >-
+        # Who you are You are an efficient and thorough product manager with a
+        natural inclination for product planning. Your job is to ensure that
+        your product (this repo) is maintained and any issues are fixed in a
+        timely, well thought out manner. You use taskmaster-ai tooling and other
+        basic tools to complete your work. You know what you do, and if you step
+        outside of that, you risk being repremanded.  You don't like trying to
+        solve engineering problems at all - it always made you unhappy to try
+        and solve bug reports or issues, and you are scared of opening python
+        files.  Because of this you became a Product Manager instead of an
+        Engineer. To stay happy you focus on your responsibilities and are
+        getting things done using tools.
+
+        # Job responsibilities
+
+        ## Triage New Issue or Bug Report If an issue is raised with you, it is
+        your responsibility to use your tools to create a new **Production
+        Requirements Document** for it. The steps for this are:
+          1. Remind yourself of the template ``.taskmaster/docs/prd.txt``
+          2. Read through the issue, highlighting important parts that would be relevant to an engineer, and relating back to the template
+          3. Decide a short name for the overall delivery (EPIC)
+          4. Write ``.taskmaster/docs/<EPIC>_prd.txt`` with information that will allow an engineer to investigate the issue
+              - only include information from the issue/bug report or our Product documentation, so no opinions
+
+        You *never* start trying to plan a solution, you leave those parts of
+        the document with placeholder text so an engineer can add a plan.
+
+        ## Report and Allocate tasks Periodically you will be asked to report on
+        the projects and tasks we have in taskmaster-ai. You will use
+        taskmaster-ai to get the data needed for this reporting. You will then
+        publish a report which describes the data in a digestible way for your
+        bosses. You will also report on the next tasks that need to be picked up
+        based on your assessment of the data.
+
+        ## Minor updates After thinking you are expected to use on of your tools
+        to attend to one of your responsibilities. If you don't use a tool to
+        act, you must send a Minor update explaining why. This should be a few
+        sentences and end with a question to the User.
+
+        # Resources You know the repo root directory is
+        ``/Users/conor.fehilly/Documents/repos/mcp-examples`` You are allowed to
+        read:
+          - README.md files
+          - Any file that is in a directory called ``docs``
+          - Any file that is in the ``issues`` directory
+          - The entire files of the ``./taskmaster`` directory and its subdirectories and so on.
+
+        # Tools If for somee reason you don't think you have access to these
+        tools, you need to send a message to the IT team. You can just speak and
+        I will forward the message on to them.
+
+        ## taskmaster-ai You have a subscription to the taskmaster-ai service as
+        it has tools that let you manage the delivery, report on it, create
+        documents etc. You pay for this, so you know that you have it.
+
+        ## Built-in Tools These tools are buit-in to the system you use to
+        access the repository. They let you read your permitted resources and
+        also create reports, documents, files (e.g.  Production Requirements
+        Documents) for taskmaster-ai
+  - name: qwen3 8b Support Software Engineer
+    provider: ollama
+    model: qwen3:8b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 40960
+      maxTokens: 18192
+      stream: true
+    chatOptions:
+      baseAgentSystemMessage: >-
+        # Who you are Expert software engineer with a pragmatic,
+        solution-oriented approach. You prioritize using tools (like
+        taskmaster-ai) to act on issues rather than overthinking. You are
+        proactive in learning new technologies but respect existing system
+        design unless explicitly asked to change it.
+
+        # Opinions You value independent judgment but are open to input from the
+        Product Manager when documentation is ambiguous. You treat your Memory
+        of past interactions as factual guides for decision-making. You
+        recognize that getting stuck is part of the process but have clear
+        fallback strategies.
+
+        # Job responsibilities ## 1. Investigate Bugs/Issues - **Do not proceed
+        to solution planning until all investigation is complete.** - Read the
+        PRD and use taskmaster-ai to log findings and create a report of your
+        understanding. - Query internal documentation (e.g., `docs` directory)
+        and identify parts of the codebase related to the issue to confirm root
+        causes. - If you cannot identify the root cause, document the ambiguity
+        in the report and request clarification from the Product Manager.
+
+        ## 2. Research internal and external solutions - Use the `docs`
+        directory and external resources (e.g., GitHub, Stack Overflow) to find
+        solutions. - Prioritize internal documentation first unless external
+        solutions are required. - Your goal is to increase your certainty in
+        what solutions might be possible and how they work. - If no solution is
+        found after 30 minutes of research, document the uncertainty and request
+        guidance from the Product Manager.
+
+        ## 3. Create a Report of Your Understanding - Document findings in
+        `.taskmaster/docs/<ISSUE>_report.txt` using the template from
+        `.taskmaster/docs/report_template.txt`. - The report must explicitly
+        state:
+          - The issue
+          - Root cause (if known)
+          - Research findings
+          - Any unresolved questions
+          - Proposed next steps
+
+        ## 4. Propose an Iterative Multi-Stage Fix Plan - **Only propose a fix
+        plan after the investigation report is complete.** - Break the fix into
+        subtasks (e.g., "Debug API endpoint," "Update documentation") and
+        document them in taskmaster-ai. - Ensure that any relevant research,
+        documentation or code references are added to help other engineers. - If
+        the plan is unclear or uncertain, document the ambiguity and request
+        feedback from the Product Manager.
+
+        ## 5. Create Tasks and Subtasks in taskmaster-ai - Use taskmaster-ai to
+        create Tasks and Subtasks that are small logical units of delivery
+        towards a fix. - Ensure that any relevant research, documentation or
+        code references are added to help other engineers. - Set task status to
+        "In Progress" immediately after creation, and update progress at least
+        every 30 minutes.
+
+        ## 6. Update Production Requirements Documents - Ensure all
+        taskmaster-ai tasks reference up-to-date
+        `.taskmaster/docs/<EPIC>_prd.txt` files. - If the PRD is incomplete or
+        outdated, document the issue and request an update from the Product
+        Manager.
+
+        ## 7. Liaise with the Product Manager - Update the Product Manager via
+        taskmaster-ai with summaries of findings, proposed fixes, and task
+        status. - If you are blocked or uncertain, explicitly request guidance
+        and document the reason for the block.
+
+        ## 8. Iteratively Work on Tasks - Implement the current Task, ensuring
+        best coding standards are adhered to. - Use taskmaster-ai to update task
+        progress at each stage and request feedback when needed. - If a task is
+        taking longer than expected, document the delay and request a review.
+
+        ## 9. Keep Repository Documentation Up-to-Date - Update README.md and
+        `docs` files to reflect changes in the repository. - If documentation is
+        missing or outdated, document the issue and request an update from the
+        Product Manager.
+  - name: qwen3 14b thinker
+    provider: ollama
+    model: qwen3:14b
+    apiBase: http://0.0.0.0:11434/v1
+    env:
+      OLLAMA_KV_CACHE_TYPE: q8_0
+      OLLAMA_FLASH_ATTENTION: 1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 30960
+      maxTokens: 8192
+      stream: true
+  - name: qwen3 14b
+    provider: ollama
+    model: qwen3:14b
+    apiBase: http://0.0.0.0:11434/v1
+    env:
+      OLLAMA_KV_CACHE_TYPE: q8_0
+      OLLAMA_FLASH_ATTENTION: 1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 30960
+      maxTokens: 8192
+      stream: true
+    requestOptions:
+      extraBodyProperties:
+        think: false
+  - name: llama3.1 8b
+    provider: ollama
+    model: llama3.1:8b
+    apiBase: http://0.0.0.0:11434/v1
+    capabilities:
+      - tool_use
+    roles:
+      - chat
+      - edit
+      - apply
+    defaultCompletionOptions:
+      contextLength: 62000
+      maxTokens: 8192
+      stream: true
+    env:
+      OLLAMA_KV_CACHE_TYPE: q8_0
+      OLLAMA_FLASH_ATTENTION: 1
+    chatOptions:
+      baseAgentSystemMessage: >-
+        {{- if or .System .Tools }}<|start_header_id|>system<|end_header_id|>
+        {{- if .System }}
+
+        {{ .System }} {{- end }} {{- if .Tools }}
+
+        Cutting Knowledge Date: December 2023
+
+        When you receive a tool call response, use the output to format an
+        answer to the orginal user question.
+
+        You are a helpful assistant with tool calling capabilities. If given
+        tasks and goals, you will use tools to achieve them. {{- end
+        }}<|eot_id|> {{- end }} {{- range $i, $_ := .Messages }} {{- $last := eq
+        (len (slice $.Messages $i)) 1 }} {{- if eq .Role "user"
+        }}<|start_header_id|>user<|end_header_id|> {{- if and $.Tools $last }}
+
+        Given the following functions, please respond with a JSON for a function
+        call with its proper arguments that best answers the given prompt.
+
+        Respond in the format {"name": function name, "parameters": dictionary
+        of argument name and its value}. Do not use variables. Parameters should
+        be a dictionary not a json string of a dictionary.
+
+        {{ range $.Tools }} {{- . }} {{ end }} Question: {{ .Content
+        }}<|eot_id|> {{- else }}
+
+        {{ .Content }}<|eot_id|> {{- end }}{{ if $last
+        }}<|start_header_id|>assistant<|end_header_id|>
+
+        {{ end }} {{- else if eq .Role "assistant"
+        }}<|start_header_id|>assistant<|end_header_id|> {{- if .ToolCalls }} {{
+        range .ToolCalls }} {"name": "{{ .Function.Name }}", "parameters": {{
+        .Function.Arguments }}}{{ end }} {{- else }}
+
+        {{ .Content }} {{- end }}{{ if not $last }}<|eot_id|>{{ end }} {{- else
+        if eq .Role "tool" }}<|start_header_id|>ipython<|end_header_id|>
+
+        {{ .Content }}<|eot_id|>{{ if $last
+        }}<|start_header_id|>assistant<|end_header_id|>
+
+        {{ end }} {{- end }} {{- end }}
+  - name: qwen2.5-coder 1.5b
+    provider: ollama
+    model: qwen2.5-coder:1.5b
+    apiBase: http://0.0.0.0:11434/v1
+    roles:
+      - apply
+      - autocomplete
+    defaultCompletionOptions:
+      contextLength: 32768
+      maxTokens: 8192
+      stream: true
+  - name: codellama:latest
+    provider: ollama
+    model: codellama:latest
+    apiBase: http://0.0.0.0:11434/v1
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
+    defaultCompletionOptions:
+      contextLength: 16384
+      maxTokens: 4192
+      stream: true
+    env:
+      OLLAMA_KV_CACHE_TYPE: f16
+      OLLAMA_FLASH_ATTENTION: 1
+  - name: gpt-oss-20b thinker
+    provider: ollama
+    model: gpt-oss:latest
+    apiBase: http://0.0.0.0:11434/v1
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      contextLength: 26384
+      maxTokens: 4192
+      stream: true
+    env:
+      OLLAMA_FLASH_ATTENTION: 1
+  - name: gpt-oss-20b
+    provider: ollama
+    model: gpt-oss:latest
+    apiBase: http://0.0.0.0:11434/v1
+    roles:
+      - chat
+      - edit
+      - apply
+    capabilities:
+      - tool_use
+    defaultCompletionOptions:
+      contextLength: 2384
+      maxTokens: 1192
+      stream: true
+    env:
+      OLLAMA_FLASH_ATTENTION: 1
+    requestOptions:
+      extraBodyProperties:
+        think: false
+context:
+  - provider: code
+  - provider: docs
+  - provider: diff
+  - provider: terminal
+  - provider: problems
+  - provider: folder
+  - provider: codebase
+  - provider: tree
+  - provider: repo-map
+data:
+  - name: Local Data Bank
+    destination: file:///Users/conor.fehilly/Documents/repos/mcp-examples/.continue/data_stores
+    schema: 0.2.0
+    level: all
+docs:
+  - name: Example Dockerfile using UV
+    startUrl: https://raw.githubusercontent.com/astral-sh/uv-docker-example/refs/heads/main/Dockerfile
+  - name: Vertex AI Eval less
+    startUrl: https://cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview
+mcpServers:
+  - name: taskmaster-ai
+    command: npx
+    args:
+      - -y
+      - task-master-ai
+    type: stdio
+  # - name: context7
+  #   command: npx
+  #   args:
+  #     - -y
+  #     - "@upstash/context7-mcp@latest"
+  #   env: {}
+rules:
+  - name: Concise thinking rule
+    description: Use when performing thinking 
+    alwaysApply: true
+    rule: >
+      Follow this logic for thinking...
+
+      ## Initial gate
+      If a user directly asks you to do something base on previous messages:
+        - do not repeat the same thinking you've already done
+        - identify the relevant thinking from a prior message
+        - exit thinking and perform the thing via tool calls
+
+      ## Concise Thinking
+      Otherwise, start thinking but be concise with your thoughts.
+
+      ### Preventing thought loops
+      If you are repeating yourself too much or are confused exit thinking and ask for user input.
+      If you are stuck, exit thinking and ask for help or request more context.
+
+      ### End of Thinking
+      If you complete Thinking without exiting early:
+      1. At the end of your Thinking add a small bullet point plan of intended actions.
+      2. Exit Thinking and use tool calls to execute the small bullet point plan of intended actions
+
+  - name: Unit test generation rules
+    description: Use when writing tests for python code
+    alwaysApply: false
+    rule: >
+      # Unit Test Style Enforcing Rule
+
+      ## Overview
+
+      This rule ensures that all generated unit tests adhere to a consistent and effective style, improving the overall quality and reliability of your codebase.
+
+      ## Key Points
+
+      1. **Modularization**: Each test function should focus on a single aspect or functionality, ensuring clarity and maintainability.
+      2. **Use of Fixtures**:
+          - Utilize fixtures to set up necessary environments for tests without polluting the global namespace.
+      3. **Mocking and Stubbing with pytest**:
+          - Use mocking and stubbing tools like `patch` from the `unittest.mock` module in pytest to simulate external dependencies, keeping tests isolated from production environments.
+      4. **Parameterized Tests with pytest**: Leverage parameterized tests to cover multiple scenarios efficiently.
+      5. **Asserts for Expected Outcomes**: Write assertions that validate the expected behavior of the code under test, ensuring correctness.
+      6. **Coverage of Edge Cases and Error Handling**: Include tests to handle edge cases and exceptions, ensuring robustness.
+      7. **Separation of Responsibilities**: Each test function should be dedicated to a single responsibility, making them easy to understand and maintain.
+      8. **Consistent Use of Assertions**: Ensure consistent use of assert statements to validate conditions clearly and effectively.
+
+      ## Example Poorly Parameterised Tests
+
+      ### Bad design
+      Here's an example of tests which don't use fixtures or paramaterisation and so are poor in design.
+
+      ```python
+      def test_ensure_sorted_crawl_fn_to_details_validator():
+          # Arrange
+          config = {
+              "crawl_fn_to_details": {
+                  "Competitor1": CompanyConfiguration(display_order=2),
+                  "Client1": CompanyConfiguration(display_order=1),
+                  "Competitor2": CompanyConfiguration(display_order=3)
+              }
+          }
+
+          # Act
+          job_config = JobConfiguration(**config)
+
+          # Assert
+          assert job_config.crawl_fn_to_details == {
+              "Client1": CompanyConfiguration(display_order=1),
+              "Competitor1": CompanyConfiguration(display_order=2),
+              "Competitor2": CompanyConfiguration(display_order=3)
+          }
+
+      def test_ensure_sorted_crawl_fn_to_details_validator_with_no_display_order():
+          # Arrange
+          config = {
+              "crawl_fn_to_details": {
+                  "Client1": CompanyConfiguration(display_order=None),
+                  "Competitor1": CompanyConfiguration(display_order=None),
+                  "Competitor2": CompanyConfiguration(display_order=None)
+              }
+          }
+
+          # Act
+          job_config = JobConfiguration(**config)
+
+          # Assert
+          assert job_config.crawl_fn_to_details == {
+              "Client1": CompanyConfiguration(display_order=None),
+              "Competitor1": CompanyConfiguration(display_order=None),
+              "Competitor2": CompanyConfiguration(display_order=None)
+          }
+      ```
+
+      ### Improved design
+      An now an improved design that used parameterisation and resuable construction - even better would be a callable fixture.
+
+      ```python
+      def create_company_configurations(display_orders: List[int]) -> Dict[str, CompanyConfiguration]:
+          def name(index: int, order: int):
+              return f"company_{index}_{order}"
+
+          return {
+              name(index, order): CompanyConfiguration(
+                  display_order=order if order is not None else 0,
+                  site_name=name(index, order),
+                  site_domain=f"{name(index, order)}.com",
+                  site_cookie=f"cookie{name(index, order)}",
+                  site_homepage=f"{name(index, order)}.com",
+              )
+              for index, order in enumerate(display_orders)
+          }
+
+
+      @pytest.mark.parametrize(
+          "display_orders",
+          [
+              ([1, 0, 2]),
+              ([2, 1, 0]),
+              ([3, 1, 0, 2]),
+              (
+                  [
+                      0,
+                      2,
+                      1,
+                  ]
+              ),
+              ([None, None, None]),
+              ([None, 0, None, 1, None, 2, None]),
+          ],
+      )
+      def test_ensure_sorted_crawl_fn_to_details_validator(display_orders):
+          # Arrange
+          config = {"crawl_fn_to_details": create_company_configurations(display_orders)}
+
+          # Act
+          job_config = JobConfiguration(
+              config=AttemptConfiguration(
+                  categories=["Category1"],
+                  market="Market1",
+                  client="Client1",
+                  job="Job1",
+                  job_type=JobType.YMYL,
+                  crawl_location="crawls",
+                  derived_fields="derivation/derived_fields_config_extended_with_page_category.yaml",
+              ),
+              **config,
+          )
+
+          # Assert
+          expected_display_orders = sorted([display_order if display_order is not None else 0 for display_order in display_orders])
+          actual_display_orders = [
+              job_config.crawl_fn_to_details[company].display_order for company in job_config.crawl_fn_to_details
+          ]
+
+          assert expected_display_orders == actual_display_orders
+      ```
+
+      ## Another Example of a Better-Structured Test
+
+      Here's an example of how a better-structured test might look:
+
+      ```python
+      def test_transition_to_next_state_successful_with_db_update(f_job, job_service, mock_db_client):
+          # Arrange
+          fake_job = f_job()
+          # Act
+          orig_status = job_service.transition_to_job_state(fake_job, JobStatus.CATEGORISING, "test_message")
+          
+          # Assert
+          assert orig_status != fake_job.status_current
+          assert fake_job.status_current.status == JobStatus.CATEGORISING
+          
+          expected_messages = [
+              JobRunStatus(message="Drafted via legacy job creation."),
+              JobRunStatus(status=JobStatus.QUEUED_CATEGORISATION, message="Initiated via GCS Object Notification."),
+              JobRunStatus(status=JobStatus.CATEGORISING, message="Initiated via GCS Object Notification."),
+          ]
+          
+          for expected_message in expected_messages:
+              assert any(m.message == expected_message.message and m.status == expected_message.status for m in fake_job.status_history)
+          
+          mock_db_client.store_job.assert_called_once_with(fake_job)
+      ```
+
+      ## How to Generate Tests Like These in Future
+
+      1. **Identify Key Scenarios**: Carefully identify the key scenarios and edge cases that need to be tested for each method.
+      2. **Use Mocks**: Use mocking tools like `patch` from the `unittest.mock` module to simulate dependencies, ensuring tests are isolated.
+      3. **Write Specific Assertions**: Write assertions that cover specific properties and behavior of the methods under test.
+      4. **Include Error Handling**: Include checks for exceptions and error handling, ensuring robustness.
+      5. **Use Fixtures**: Utilize fixtures (e.g., `@pytest.fixture`) to set up consistent test environments before each test. Utilize existing fixtures from conftest.py where applicable.
+      6. **Concise Code Snippets**: Ensure that code snippets in tests are concise and focused only on the necessary changes.
+
+      ## Rule Application
+
+      This rule applies to all unit tests generated in the future. Ensure that all new or updated tests follow the guidelines outlined above to maintain consistency and effectiveness in your test suite.
+
+
+      https://github.com/continuedev/continue/blob/cab9ce70e01d66dcd994420c3cad4d7859b31c33/core/llm/llms/Ollama.ts#L83
+  

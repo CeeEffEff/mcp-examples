@@ -220,6 +220,17 @@ I think that `./continue` best exhibits the configuration of these capabilities:
 
 ## Debugging 🔍
 
+## Neo4j
+
+```
+docker run \
+    --publish=7474:7474 --publish=7687:7687 \
+    --volume=$HOME/neo4j/data:/data \
+    neo4j
+```
+
+## Debugging
+
 The following might be useful for debugging.
 
 ### Activity Monitor 📊
@@ -366,3 +377,7 @@ By carefully tuning context size alongside quantization and flash attention sett
 ---
 
 Need help before we start? Reach out on gchat to me.
+-----
+
+
+brew install mcp-toolbox

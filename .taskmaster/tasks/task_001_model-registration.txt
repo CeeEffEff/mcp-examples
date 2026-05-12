@@ -1,0 +1,31 @@
+# Task ID: 1
+# Title: Model Registration
+# Status: pending
+# Dependencies: None
+# Priority: medium
+# Description: Register source and target models in Vertex AI
+# Details:
+
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. Register source model (gemini-2.5-flash-lite) with Vertex AI Model Registry [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 2. Register target model (gemini-2.5-pro) with updated parameters [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+
+## 3. Verify model registration status via Vertex AI console [pending]
+### Dependencies: None
+### Description: 
+### Details:
+
+

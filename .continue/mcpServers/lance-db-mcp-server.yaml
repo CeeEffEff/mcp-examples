@@ -1,0 +1,12 @@
+name: Lance DB MCP
+version: 1.0.0
+schema: v1
+
+mcpServers:
+  - name: lancedb
+    command: npx
+    args:
+      # - "DISABLED" 
+      - "lance-mcp"
+      - "/Users/conor.fehilly/Documents/repos/mcp-examples/.continue/data_stores/lancedb"
+  

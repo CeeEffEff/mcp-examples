@@ -1,0 +1,275 @@
+@startuml GCP Digital Twin - Neo4j Schema
+!define ENTITY_COLOR #E1F5FF
+!define COMPUTE_COLOR #FFE0B2
+!define STORAGE_COLOR #C8E6C9
+!define NETWORK_COLOR #F8BBD0
+!define IAM_COLOR #FFF9C4
+!define ORG_COLOR #E0E0E0
+
+title GCP Digital Twin - Complete Neo4j Schema
+
+' Organizational Resources
+package "Organizational Hierarchy" <<Rectangle>> #E0E0E0 {
+  entity "Organization" as org {
+    + id: String (unique)
+    + name: String
+    + display_name: String
+    + created_at: DateTime
+  }
+  
+  entity "Folder" as folder {
+    + id: String (unique)
+    + name: String
+    + display_name: String
+    + parent_id: String
+    + created_at: DateTime
+  }
+  
+  entity "Project" as project {
+    + id: String (unique)
+    + project_id: String
+    + name: String
+    + project_number: String
+    + state: String
+    + created_at: DateTime
+  }
+}
+
+' Compute Resources
+package "Compute Resources" <<Rectangle>> #FFE0B2 {
+  entity "VirtualMachine" as vm {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + zone: String
+    + machine_type: String
+    + status: String
+    + cpu_count: Integer
+    + memory_gb: Float
+    + created_at: DateTime
+  }
+  
+  entity "GKECluster" as gke {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + location: String
+    + status: String
+    + node_count: Integer
+    + created_at: DateTime
+  }
+  
+  entity "CloudFunction" as function {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + region: String
+    + runtime: String
+    + status: String
+    + created_at: DateTime
+  }
+  
+  entity "InstanceGroup" as ig {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + zone: String
+    + size: Integer
+    + created_at: DateTime
+  }
+}
+
+' Storage Resources
+package "Storage Resources" <<Rectangle>> #C8E6C9 {
+  entity "PersistentDisk" as disk {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + zone: String
+    + disk_type: String
+    + size_gb: Integer
+    + status: String
+    + created_at: DateTime
+  }
+  
+  entity "StorageBucket" as bucket {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + location: String
+    + storage_class: String
+    + created_at: DateTime
+  }
+  
+  entity "CloudSQLInstance" as sql {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + region: String
+    + database_version: String
+    + tier: String
+    + status: String
+    + created_at: DateTime
+  }
+  
+  entity "BigQueryDataset" as bq {
+    + id: String (unique)
+    + dataset_id: String
+    + project_id: String
+    + location: String
+    + created_at: DateTime
+  }
+}
+
+' Network Resources
+package "Network Resources" <<Rectangle>> #F8BBD0 {
+  entity "VPCNetwork" as vpc {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + auto_create_subnetworks: Boolean
+    + routing_mode: String
+    + created_at: DateTime
+  }
+  
+  entity "Subnetwork" as subnet {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + region: String
+    + ip_cidr_range: String
+    + created_at: DateTime
+  }
+  
+  entity "FirewallRule" as firewall {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + priority: Integer
+    + direction: String
+    + allowed_rules: List<Map>
+    + created_at: DateTime
+  }
+  
+  entity "LoadBalancer" as lb {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + region: String
+    + load_balancing_scheme: String
+    + created_at: DateTime
+  }
+  
+  entity "CloudRouter" as router {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + region: String
+    + created_at: DateTime
+  }
+}
+
+' IAM Resources
+package "IAM & Security" <<Rectangle>> #FFF9C4 {
+  entity "ServiceAccount" as sa {
+    + id: String (unique)
+    + email: String
+    + project_id: String
+    + display_name: String
+    + created_at: DateTime
+  }
+  
+  entity "IAMPolicy" as policy {
+    + id: String (unique)
+    + resource_id: String
+    + role: String
+    + members: List<String>
+    + created_at: DateTime
+  }
+  
+  entity "SecretManagerSecret" as secret {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + created_at: DateTime
+  }
+}
+
+' Monitoring Resources
+package "Monitoring & Logging" <<Rectangle>> #E1F5FF {
+  entity "AlertPolicy" as alert {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + enabled: Boolean
+    + conditions: List<Map>
+    + created_at: DateTime
+  }
+  
+  entity "LogSink" as logsink {
+    + id: String (unique)
+    + name: String
+    + project_id: String
+    + destination: String
+    + filter: String
+    + created_at: DateTime
+  }
+}
+
+' Organizational Relationships
+org -down-> folder : CONTAINS
+folder -down-> project : CONTAINS
+folder -down-> folder : CONTAINS
+
+' Project to Resources
+project -down-> vm : CONTAINS
+project -down-> gke : CONTAINS
+project -down-> function : CONTAINS
+project -down-> disk : CONTAINS
+project -down-> bucket : CONTAINS
+project -down-> sql : CONTAINS
+project -down-> bq : CONTAINS
+project -down-> vpc : CONTAINS
+project -down-> sa : CONTAINS
+
+' Compute Relationships
+vm -right-> disk : ATTACHED_TO
+vm -right-> subnet : USES
+vm -right-> sa : USES
+vm -down-> ig : MEMBER_OF
+gke -down-> vm : RUNS_ON
+
+' Network Relationships
+vpc -down-> subnet : CONTAINS
+subnet -right-> router : ROUTES_TO
+vpc -down-> firewall : PROTECTED_BY
+lb -right-> ig : TARGETS
+vpc -right-> vpc : PEERED_WITH
+
+' Storage Relationships
+vm -down-> bucket : READS_FROM
+vm -down-> bucket : WRITES_TO
+sql -right-> sql : REPLICATES_TO
+
+' IAM Relationships
+project -down-> policy : HAS_IAM_POLICY
+policy -right-> sa : GRANTS_TO
+vm -up-> sa : USES
+function -up-> sa : USES
+
+' Monitoring Relationships
+alert -down-> vm : ALERTS_ON
+logsink -down-> bucket : LOGS_TO
+
+' Legend
+legend right
+  |= Color |= Resource Category |
+  | <back:#E0E0E0>   </back> | Organizational |
+  | <back:#FFE0B2>   </back> | Compute |
+  | <back:#C8E6C9>   </back> | Storage |
+  | <back:#F8BBD0>   </back> | Network |
+  | <back:#FFF9C4>   </back> | IAM & Security |
+  | <back:#E1F5FF>   </back> | Monitoring |
+endlegend
+
+@enduml

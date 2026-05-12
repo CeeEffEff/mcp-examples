@@ -34,6 +34,10 @@ This document outlines common pitfalls and recommendations when working with age
   - Use premium models with Cline for complex tasks
   - Local models may require frequent task resets due to context limits
 
+- ** Model Base Url **
+  Depends on the host and model you are using.
+    - Cline with Cwen3-Coder requies the OpenAI url:
+
 ---
 
 ## Context Management

@@ -1,0 +1,376 @@
+{
+  "0": {
+    "id": "1",
+    "title": "Static Analysis Implementation",
+    "description": "Implement static analysis for rule evaluation framework",
+    "subtasks": [
+      {
+        "id": "1.1",
+        "title": "Rule Syntax Validation",
+        "status": "completed"
+      },
+      {
+        "id": "1.2",
+        "title": "Semantic Clarity Assessment",
+        "status": "pending"
+      },
+      {
+        "id": "1.3",
+        "title": "Scope Boundary Analysis",
+        "status": "pending"
+      }
+    ]
+  },
+  "1": {
+    "id": "2",
+    "title": "Dynamic Evaluation Implementation",
+    "description": "Implement dynamic evaluation for rule evaluation framework",
+    "subtasks": [
+      {
+        "id": "2.1",
+        "title": "Mock Scenario Testing",
+        "status": "pending"
+      },
+      {
+        "id": "2.2",
+        "title": "Expected vs Actual Outcome Comparison",
+        "status": "pending"
+      },
+      {
+        "id": "2.3",
+        "title": "Edge Case Identification",
+        "status": "pending"
+      }
+    ]
+  },
+  "2": {
+    "id": "3",
+    "title": "Metric Collection Implementation",
+    "description": "Implement metric collection for rule evaluation framework",
+    "subtasks": [
+      {
+        "id": "3.1",
+        "title": "Compliance Rate Calculation",
+        "status": "pending"
+      },
+      {
+        "id": "3.2",
+        "title": "Output Quality Scoring",
+        "status": "pending"
+      },
+      {
+        "id": "3.3",
+        "title": "Execution Time Profiling",
+        "status": "pending"
+      }
+    ]
+  },
+  "3": {
+    "id": "4",
+    "title": "Evaluation Report Generation",
+    "description": "Generate evaluation report based on framework template",
+    "dependencies": [
+      "1",
+      "2",
+      "3"
+    ],
+    "status": "blocked"
+  },
+  "dataset": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Dataset Preparation",
+        "description": "Create 10+ prompt-ground truth pairs and validate dataset",
+        "details": "",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create 10+ prompt-ground truth pairs (JSON format)",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Validate dataset alignment with system prompt requirements",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Store dataset in Google Cloud Storage (gs://bucket/prompt_data.jsonl)",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 4,
+            "title": "Add data quality checks for prompt diversity and ground truth accuracy",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-26T21:16:58.456Z",
+      "updated": "2025-08-26T21:17:09.430Z",
+      "description": "Tag created on 8/26/2025"
+    }
+  },
+  "model-registration": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Model Registration",
+        "description": "Register source and target models in Vertex AI",
+        "details": "",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Register source model (gemini-2.5-flash-lite) with Vertex AI Model Registry",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Register target model (gemini-2.5-pro) with updated parameters",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Verify model registration status via Vertex AI console",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-26T21:17:01.986Z",
+      "updated": "2025-08-26T21:17:10.825Z",
+      "description": "Tag created on 8/26/2025"
+    }
+  },
+  "batch-prediction": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Batch Prediction Setup",
+        "description": "Configure batch prediction job for model comparison",
+        "details": "",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Format input JSONL file with request/response structure",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Create Vertex AI BatchPredictionJob configuration",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Monitor job status and handle errors (token limits, format issues)",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-26T21:17:03.917Z",
+      "updated": "2025-08-26T21:17:11.756Z",
+      "description": "Tag created on 8/26/2025"
+    }
+  },
+  "evaluation-implementation": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Evaluation Implementation",
+        "description": "Develop pairwise evaluation rubric and comparison function",
+        "details": "",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Develop pairwise evaluation rubric (accuracy, fluency, relevance)",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Implement comparison function for model responses",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Store results in structured JSON format",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-26T21:17:04.891Z",
+      "updated": "2025-08-26T21:17:12.535Z",
+      "description": "Tag created on 8/26/2025"
+    }
+  },
+  "result-analysis": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Result Analysis",
+        "description": "Generate visualizations and analyze model performance",
+        "details": "",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Generate visualization reports (bar charts, heatmaps, trend analysis)",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Create dashboard with interactive metric filters",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Export analysis to Google Cloud Storage",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-26T21:17:06.822Z",
+      "updated": "2025-08-26T21:17:13.285Z",
+      "description": "Tag created on 8/26/2025"
+    }
+  },
+  "model-iteration": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Model Iteration",
+        "description": "Update model parameters based on evaluation metrics",
+        "details": "",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update model parameters based on metrics",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 2,
+            "title": "Re-run evaluation cycle with updated models",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          },
+          {
+            "id": 3,
+            "title": "Track parameter changes and performance metrics in documentation",
+            "description": "",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 1
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-26T21:17:07.810Z",
+      "updated": "2025-08-26T21:17:14.231Z",
+      "description": "Tag created on 8/26/2025"
+    }
+  }
+}
