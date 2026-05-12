@@ -1463,6 +1463,7 @@ wheels = [
 [package.optional-dependencies]
 ws = [
     { name = "websockets" },
+<<<<<<< HEAD
 ]
 
 [[package]]
@@ -1477,6 +1478,8 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/95/4e/719acb8b9b8c872939cb352d32224c43a3782f4ed3c3269d4a0409fa2fc4/mcp_neo4j_memory-0.3.0.tar.gz", hash = "sha256:9588a645d38bce60c8523ba3eab7d7fffbf5a2d0cfd389066ae41f099e708c1c", size = 898576, upload-time = "2025-08-19T14:28:48.739Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3b/ab/8c4ac5816332b3581bb3beaabf1263be85881119152a190854fb14325090/mcp_neo4j_memory-0.3.0-py3-none-any.whl", hash = "sha256:1230baa2e2117eba03517f1c7e0ac9ed288a36e7d08d15220b54d3699b662bc7", size = 10600, upload-time = "2025-08-19T14:28:47.564Z" },
+=======
+>>>>>>> main
 ]
 
 [[package]]
