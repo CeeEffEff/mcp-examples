@@ -34,7 +34,7 @@ neo4j==5.14.1
 
 # Async/Concurrency
 asyncio==3.4.3
-aiohttp==3.13.4
+aiohttp==3.14.1
 
 # Data Processing
 pydantic==2.5.3
